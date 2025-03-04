@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+.main-content {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    
+    padding-left: 11%;
+    background-color: #f4f4f4;
+   
+    flex-grow: 1; // Allow the main content to grow and take up remaining space
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
