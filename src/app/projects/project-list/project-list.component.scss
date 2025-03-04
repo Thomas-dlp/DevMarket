@@ -1,0 +1,12 @@
+.list-item{
+    box-sizing: border-box;
+    background-color: rgb(26, 137, 235);
+    border-radius: 1%;
+    // border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    padding: 2px;
+    justify-content: center;
+    margin: auto;
+}

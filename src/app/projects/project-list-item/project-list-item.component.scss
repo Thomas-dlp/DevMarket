@@ -1,0 +1,33 @@
+.title{
+    font-weight: bolder;
+}
+
+.subtitle{
+    font-style: italic;
+}
+
+img{
+    max-inline-size: 80%;
+    block-size: auto;
+    border-radius: 5%;
+}
+
+.project-list{
+    
+    background-color:lightblue;
+    border-radius: 1%;
+    box-sizing: border-box;
+    // border: 2px solid black;
+    
+    width: 95%;
+    
+    
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-top: 5px;
+
+}

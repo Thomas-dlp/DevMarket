@@ -2,14 +2,14 @@ import { Component, Input, input, OnInit } from '@angular/core';
 import { Project } from '../project-templates/project-template';
 
 @Component({
-  selector: 'app-project-item',
+  selector: 'app-project-list-item',
   imports: [],
-  templateUrl: './project-item.component.html',
-  styleUrl: './project-item.component.scss'
+  templateUrl: './project-list-item.component.html',
+  styleUrl: './project-list-item.component.scss'
 })
-export class ProjectItemComponent implements OnInit {
+export class ProjectListItemComponent implements OnInit {
 ngOnInit(): void {
-  console.log(this.project);
+  
 }
 @Input() project!:Project;
 }

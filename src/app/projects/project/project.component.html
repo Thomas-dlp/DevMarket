@@ -1,0 +1,6 @@
+<p class="main-content">project works!</p>
+<div *ngIf="project$|async as project" >
+    <a>{{project.title}}</a>
+    <a>{{project.description}}</a>
+    <img [src]="project.imageUrl">
+</div>
