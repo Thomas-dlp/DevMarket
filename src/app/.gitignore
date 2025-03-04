@@ -1,0 +1,17 @@
+# Compiled output
+dist/
+out-tsc/
+.angular/
+node_modules/
+
+# Environment files
+src/environments/environment*.ts
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs & OS Files
+npm-debug.log*
+package-lock.json
+.DS_Store
