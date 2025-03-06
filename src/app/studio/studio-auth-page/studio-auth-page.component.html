@@ -1,0 +1,27 @@
+<div class="main-content">
+    <span *ngIf="!(newUser$|async)">
+        <h2>Welcome back, please login!</h2>
+        <form [formGroup]="authForm" >
+            <label for="email">Email</label>
+            <input type="email" name="email" [formControl]="emailCtrl">
+            <label for="password">Password</label>
+            <input type="password" name="password" formControlName="password">
+        </form>
+    </span>
+    
+    <span *ngIf="newUser$|async">
+        <h2>Create new account</h2>
+        <form [formGroup]="newUserForm" >
+            <label for="email">Email</label>
+            <input type="email" name="email" formControlName="email" >
+            <label for="password">Password</label>
+            <input type="password" name="password" formControlName="password">
+            <label for="confirmPassword">Confirm password</label>
+            <input type="password" name="confirmPassword" formControlName="confirmPassword">
+        </form>
+    
+    </span>
+    
+    <button (click)="toggleForm()">{{toggleFormText}}</button>
+    
+</div>

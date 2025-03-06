@@ -1,7 +1,7 @@
 <div class="main-content">
     <p>Projects</p>
     <div class="list-item">
-        <app-project-list-item  *ngFor="let project of projects |async"  [project]="project" (click)="RouteToComponent(project)"> </app-project-list-item>
+        <app-project-list-item  *ngFor="let project of projects$ |async"  [project]="project" (click)="RouteToComponent(project)"> </app-project-list-item>
     </div> 
     
 

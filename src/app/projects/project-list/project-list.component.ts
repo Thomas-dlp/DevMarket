@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../project-services/project.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProjectListItemComponent } from "../project-list-item/project-list-item.component";
-import{Router} from '@angular/router'
+import{ActivatedRoute, Router} from '@angular/router'
 import { Project } from '../project-templates/project-template';
+import{ProjectResolver} from '../project-resolvers/project-resolver';
 
 @Component({
   selector: 'app-project-list',
@@ -15,14 +16,18 @@ import { Project } from '../project-templates/project-template';
 export class ProjectListComponent implements OnInit {
 
   
-   projects!:Observable<any[]>;
+   projects$!:Observable<any[]>;
 
   constructor(private projectServices: ProjectService,
-              private router: Router
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              
   ){}
   
   ngOnInit(): void {
-    this.projects=this.projectServices.getProjects();
+    this.projects$=this.activatedRoute.data.pipe(
+      map(data=>data['projects'])
+    );
     
   }
 
