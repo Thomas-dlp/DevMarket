@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, of, startWith, take, tap } from 'rxjs';
+import { AuthService } from '../../services/auth-services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { BehaviorSubject, Observable, of, startWith, take, tap } from 'rxjs';
   styleUrl: './studio-auth-page.component.scss'
 })
 export class StudioAuthPageComponent implements OnInit {
+
 
 
   authForm!: FormGroup;
@@ -26,7 +29,10 @@ export class StudioAuthPageComponent implements OnInit {
   newUser$=new BehaviorSubject<boolean>(false);
   toggleFormText= "I don't have an account";
 
-  constructor(private formBuilder: FormBuilder){}
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private route: Router
+  ){}
 
 
   ngOnInit(): void {
@@ -39,11 +45,15 @@ export class StudioAuthPageComponent implements OnInit {
     this.authForm=this.formBuilder.group({
       email:this.emailCtrl,
       password:this.passwordCtrl
+    },{
+      updateOn:'blur'
     });
     this.newUserForm=this.formBuilder.group({
       email:this.newEmailCtrl,
       password:this.newPasswordCtrl,
       confirmPassword: this.newConfirmPasswordCtrl
+    },{
+      updateOn:'blur'
     });
   }
 
@@ -55,6 +65,36 @@ export class StudioAuthPageComponent implements OnInit {
     this.newConfirmPasswordCtrl=this.formBuilder.control('',Validators.required)
   }
 
+  private setLoginValidators(newUser:boolean): void{
+    if (newUser){
+      this.emailCtrl.clearValidators();
+      this.passwordCtrl.clearValidators();
+    }else{
+      this.emailCtrl.addValidators([Validators.required,Validators.email]),
+      this.passwordCtrl.addValidators(Validators.required)
+    }
+    this.emailCtrl.updateValueAndValidity();
+    this.passwordCtrl.updateValueAndValidity();
+  }
+  
+  private setNewUserValidators(newUser:boolean): void{
+    if (newUser){
+      this.newEmailCtrl.addValidators([Validators.required, Validators.email]),
+      this.newPasswordCtrl.addValidators(Validators.required)
+      this.newConfirmPasswordCtrl.addValidators(Validators.required)
+    }else{
+      this.newEmailCtrl.clearValidators();
+      this.newPasswordCtrl.clearValidators();
+      this.newConfirmPasswordCtrl.clearValidators();
+      
+    }
+    this.newEmailCtrl.updateValueAndValidity();
+    this.newPasswordCtrl.updateValueAndValidity();
+    this.newConfirmPasswordCtrl.updateValueAndValidity();
+  }
+
+
+
   private initObservables():void{
     
   }
@@ -64,5 +104,23 @@ export class StudioAuthPageComponent implements OnInit {
     this.newUser$.next(newValue)
     this.toggleFormText= newValue? "I already have an account":"I don't have an account";
     }
+  
+  submitAuthForm() {
+    this.authService.login(this.authForm.value);
+    // if(this.authService.login(this.authForm.value['email'],this.authForm.value["password"])){
+    //   this.authForm.reset();
+    //   this.route.navigateByUrl("");
+    // }else{
+    //   //display error
+    //   this.passwordCtrl.reset(); //reset only the password since email adress are rarely wrong.
+    // };
+    
+    }
+
+  submitNewUserForm() {
+    //authService.addNewUser(this.newUserForm);
+    this.authForm.reset();
+    }
+
 
 }
