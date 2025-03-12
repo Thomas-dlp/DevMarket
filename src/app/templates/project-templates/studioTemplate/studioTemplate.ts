@@ -1,4 +1,4 @@
-import { Project } from "../../projects/project-templates/project-template";
+import { Project } from "../project-template";
 
 export class StudioTemplate{
     id!:"";

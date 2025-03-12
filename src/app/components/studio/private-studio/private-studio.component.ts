@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StudioTemplate } from '../studioTemplate/studioTemplate';
+import { StudioTemplate } from '../../../templates/project-templates/studioTemplate/studioTemplate';
 
 
 @Component({

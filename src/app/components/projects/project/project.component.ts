@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Project } from '../project-templates/project-template';
-import { ProjectService } from '../../services/auth-service/project-services/project.service';
+import { Project } from '../../../templates/project-templates/project-template';
+import { ProjectService } from '../../../services/project-services/project.service';
 import { Observable, take, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 

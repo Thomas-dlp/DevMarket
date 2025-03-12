@@ -1,8 +1,8 @@
 import{Injectable} from '@angular/core';
 import { Observable } from "rxjs/internal/Observable";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router"
-import {Project} from "../project-templates/project-template";
-import {ProjectService} from "../../services/auth-service/project-services/project.service";
+import {Project} from "../../../templates/project-templates/project-template";
+import {ProjectService} from "../../../services//project-services/project.service";
 
 @Injectable()
 export class ProjectResolver implements Resolve<Project[]>{

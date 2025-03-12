@@ -19,12 +19,13 @@
             <input id="password" type="password" name="password" autocomplete="new-password" placeholder="enter your password" formControlName="password">
             <label for="confirmPassword">Confirm password</label>
             <input id="confirmPassword" type="password" name="confirmPassword" autocomplete="new-password" placeholder="confirm your password" formControlName="confirmPassword">
-            <button type="submit" [disabled]="authForm.invalid" (click)="submitNewUserForm()">Validate</button>
+            <button type="submit" [disabled]="newUserForm.invalid" (click)="submitNewUserForm()">Validate</button>
 
         </form>
     
     </span>
     
     <div class="clickable-link" (click)="toggleForm()">{{toggleFormText}}</div>
+    <div ng *ngIf="loading$|async" class="loading-spinner"></div>
     
 </div>

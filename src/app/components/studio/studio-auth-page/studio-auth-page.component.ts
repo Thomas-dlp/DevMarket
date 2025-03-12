@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, Observable, of, startWith, take, tap } from 'rxjs';
-import { AuthService } from '../../services/auth-services/auth.service';
+import { BehaviorSubject, map, Observable, of, startWith, take, tap } from 'rxjs';
+import { AuthService } from '../../../services/auth-services/auth.service';
 import { Router } from '@angular/router';
+import { LoginResponse } from '../../../models/login-response.model';
+import { LoadingService } from '../../../services/loading-service';
 
 
 @Component({
@@ -15,7 +17,7 @@ import { Router } from '@angular/router';
 })
 export class StudioAuthPageComponent implements OnInit {
 
-
+  loading$!:Observable<boolean>;
 
   authForm!: FormGroup;
   emailCtrl!: FormControl;
@@ -29,14 +31,17 @@ export class StudioAuthPageComponent implements OnInit {
   newUser$=new BehaviorSubject<boolean>(false);
   toggleFormText= "I don't have an account";
 
+  authErrorMessage!:string;
+
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
-              private route: Router
+              private route: Router,
+              private loadingService: LoadingService
   ){}
 
 
   ngOnInit(): void {
-    this.initObservables();
+    this.loading$=this.loadingService.loading$;
     this.initFormControls();
     this.initMainform();
   }
@@ -93,34 +98,33 @@ export class StudioAuthPageComponent implements OnInit {
     this.newConfirmPasswordCtrl.updateValueAndValidity();
   }
 
-
-
-  private initObservables():void{
-    
-  }
-
   toggleForm() {
     var newValue=!this.newUser$.value;
     this.newUser$.next(newValue)
     this.toggleFormText= newValue? "I already have an account":"I don't have an account";
     }
   
-  submitAuthForm() {
-    this.authService.login(this.authForm.value);
-    // if(this.authService.login(this.authForm.value['email'],this.authForm.value["password"])){
-    //   this.authForm.reset();
-    //   this.route.navigateByUrl("");
-    // }else{
-    //   //display error
-    //   this.passwordCtrl.reset(); //reset only the password since email adress are rarely wrong.
-    // };
+  submitAuthForm() {this.sendLoggingCredentials(this.authService.login(this.authForm.value));}
+
+  submitNewUserForm() {this.sendLoggingCredentials(this.authService.createNewUser(this.newUserForm.value));}
+
+  private sendLoggingCredentials (postResponse: Observable<LoginResponse>):void{
+    postResponse.subscribe({
+      next:
+        (response)=>{
+         // localStorage.setItem('token',response.token);
     
+        this.route.navigate(['studio/profile', response.id]);
+        },
+      error: (err)=>{
+          this.authErrorMessage="Login/register operation failed"
+        }
     }
-
-  submitNewUserForm() {
-    //authService.addNewUser(this.newUserForm);
-    this.authForm.reset();
+      
+    
+      
+    );
     }
-
+    
 
 }
