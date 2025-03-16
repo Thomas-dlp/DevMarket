@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, switchMap, take } from 'rxjs';
-import { Project } from '../../templates/project-templates/project-template';
+import { Project } from '../../templates/project.template';
 
 @Injectable()
 export class ProjectService {

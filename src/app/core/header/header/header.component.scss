@@ -12,7 +12,8 @@
     text-align: center; // Centers the text
     text-transform: uppercase;
     font-weight: bolder;
-   
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 20pt;
 }
 
 
@@ -22,9 +23,10 @@ ul {
     display: flex; // Keeps the list items in a horizontal row
     list-style: none; // Removes bullet points
     justify-content: center;
-    font-weight: bold;
-    font-family: monospace;
-    font-size: larger;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: bolder;
+    font-size: 15pt;
+ 
     
 
     li {

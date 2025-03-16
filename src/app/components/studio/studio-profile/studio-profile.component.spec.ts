@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrivateStudioComponent } from './private-studio.component';
+import { PrivateStudioComponent } from './studio-profile.component';
 
 describe('PrivateStudioComponent', () => {
   let component: PrivateStudioComponent;

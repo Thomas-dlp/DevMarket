@@ -1,12 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+
 .main-content {
     // display: flex;
-    justify-content: left;
+    justify-content:start;
     align-items: center;
-    
-    padding-left: 11%;
+    margin: 0;
+    padding: 0;
+    padding-block-start: 11%;
     background-color: #f4f4f4;
    
     flex-grow: 1; // Allow the main content to grow and take up remaining space
+    
+   
 }
 
 *{

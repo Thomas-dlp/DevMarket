@@ -1,0 +1,46 @@
+.background-image{
+    
+}
+
+.logo{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    height: 10vh;
+    border-radius: 50%;
+}
+
+h2{
+    display: block;           // Revert back to block-level element (default for p)
+    text-align: center;       // Center the text inside the p element
+    width: 50%;               // Set the width of the p element
+    margin: 0 auto; 
+    padding-bottom: 5px; 
+    color:rgba(255, 254, 254, 0.772);
+    background-color: rgba(57, 61, 67, 0.7); // Black with 50% transparency
+
+    font-size: 35px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: bolder;
+}
+p{
+    display: block;           // Revert back to block-level element (default for p)
+    text-align: center;       // Center the text inside the p element
+    width: 50%;               // Set the width of the p element
+    margin: 0 auto;   
+    color:rgb(255, 255, 255);
+    background-color: rgba(57, 61, 67, 0.7); // Black with 50% transparency
+
+    font-size: 24px;
+    font-style: italic;
+}
+
+.main-content {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh; /* Ensure it has a height */
+    
+
+}

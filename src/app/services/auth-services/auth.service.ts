@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environments";
-import { LoginResponse } from "../../models/login-response.model";
+import { LoginResponse } from "../../templates/login-response.template";
 import {  catchError, delay, finalize, Observable, throwError } from "rxjs";
-import { LoginCredentials } from "../../models/login-credentials.model";
-import { RegistrationCredentials } from "../../models/registration-credentials";
+import { LoginCredentials } from "../../templates/login-credentials.template";
+import { RegistrationCredentials } from "../../templates/registration-credentials.template";
 import { LoadingService } from "../loading-service";
 
 @Injectable()

@@ -1,0 +1,38 @@
+<div class="main-content" *ngIf="studioProfile$|async as studioProfile">
+   
+    <form [formGroup]="studioProfileForm">
+        <li>
+            <label>Name</label>
+            <input type="string" formControlName="name">
+        </li>
+
+        <li>
+            <label>LogoUrl</label>
+            <input type=string formControlName="logoUrl">
+           
+        </li>
+        <li>
+            <label>BackgroundUrl</label>
+            <input type=string formControlName="backgroundPictureUrl">
+        </li>
+        <li>
+            <label>Abstract</label>
+            <input type=string formControlName="abstract">
+        </li>
+        <li>
+            <label>Bio</label>
+            <input type=string formControlName="bio">
+        </li>
+        <button type="submit" (click)="saveForm()">Save</button>
+        <button routerLink="/studio/page/{{studioProfileId}}">Open</button>
+    </form>
+
+
+
+
+    
+        
+        
+   
+
+</div>

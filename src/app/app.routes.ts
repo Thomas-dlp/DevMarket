@@ -6,7 +6,10 @@ import { ProjectComponent } from '../app/components/projects/project/project.com
 import { ProjectResolver } from '../app/components/projects/project-resolvers/project-resolver';
 import { StudioAuthPageComponent } from '../app/components/studio/studio-auth-page/studio-auth-page.component';
 import { AuthService } from './services/auth-services/auth.service';
-import { PrivateStudioComponent } from './components/studio/private-studio/private-studio.component';
+import { PrivateStudioComponent } from './components/studio/studio-profile/studio-profile.component';
+import { StudioProfileService } from './services/studio-profile-service';
+import { StudioPageComponent } from './components/studio/studio-page/studio-page.component';
+import { StudioPageService } from './services/studio-page-service';
 
 export const routes: Routes = [
     {path:'projects',
@@ -15,7 +18,8 @@ export const routes: Routes = [
     {path:'projects/:id', component: ProjectComponent, providers:[ProjectService]},
     {path:'user-profile', component: UserProfileComponent},
     {path:'auth-studio',component: StudioAuthPageComponent, providers:[AuthService]},
-    {path:'studio/profile/:id', component: PrivateStudioComponent},
+    {path:'studio/profile/:id', component: PrivateStudioComponent,providers:[StudioProfileService]},
+    {path:'studio/page/:id', component: StudioPageComponent,providers:[StudioPageService]},
     {path:"", component:LandingPageComponent}
     
 ];

@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, map, Observable, of, startWith, take, tap } from 'rxjs';
 import { AuthService } from '../../../services/auth-services/auth.service';
 import { Router } from '@angular/router';
-import { LoginResponse } from '../../../models/login-response.model';
+import { LoginResponse } from '../../../templates/login-response.template';
 import { LoadingService } from '../../../services/loading-service';
 
 

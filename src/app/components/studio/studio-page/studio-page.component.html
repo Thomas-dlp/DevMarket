@@ -1,0 +1,5 @@
+<div class="main-content" *ngIf="studioPage$|async as studioPage" [ngStyle]="{'background-image': 'url(' + studioPage.backgroundPictureUrl + ')'}">
+    <!-- <img class="logo"[src]="studioPage.logoUrl"> -->
+    <h2>{{studioPage.name}}</h2>
+    <p>{{studioPage.bio}}</p>
+</div>

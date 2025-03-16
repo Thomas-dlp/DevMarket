@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Project } from '../../../templates/project-templates/project-template';
+import { Project } from '../../../templates/project.template';
 import { ProjectService } from '../../../services/project-services/project.service';
 import { Observable, take, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';

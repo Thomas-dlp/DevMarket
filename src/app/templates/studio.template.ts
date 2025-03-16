@@ -1,6 +1,6 @@
-import { Project } from "../project-template";
+import { Project } from "../templates/project.template";
 
-export class StudioTemplate{
+export class Studio{
     id!:"";
     name!:"";
     projects!:Project[];

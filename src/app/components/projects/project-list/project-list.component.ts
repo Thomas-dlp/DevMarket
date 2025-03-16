@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProjectListItemComponent } from "../project-list-item/project-list-item.component";
 import{ActivatedRoute, Router} from '@angular/router'
-import { Project } from '../../../templates/project-templates/project-template';
+import { Project } from '../../../templates/project.template';
 
 @Component({
   selector: 'app-project-list',
