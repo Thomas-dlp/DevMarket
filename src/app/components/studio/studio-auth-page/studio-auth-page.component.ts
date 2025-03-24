@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, map, Observable, of, startWith, take, tap } from 'rxjs';
 import { AuthService } from '../../../services/auth-services/auth.service';
@@ -17,6 +17,9 @@ import { LoadingService } from '../../../services/loading-service';
 })
 export class StudioAuthPageComponent implements OnInit {
 
+
+
+
   loading$!:Observable<boolean>;
 
   authForm!: FormGroup;
@@ -32,6 +35,7 @@ export class StudioAuthPageComponent implements OnInit {
   toggleFormText= "I don't have an account";
 
   authErrorMessage!:string;
+  private minPasswordLength: number=6;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -62,12 +66,18 @@ export class StudioAuthPageComponent implements OnInit {
     });
   }
 
+  updateAllForms() {
+    console.log("hovering");
+    this.authForm.updateValueAndValidity();
+    
+    }
+
   private initFormControls():void{
-    this.emailCtrl=this.formBuilder.control('',Validators.required),
-    this.passwordCtrl=this.formBuilder.control('',Validators.required),
-    this.newEmailCtrl=this.formBuilder.control('',Validators.required),
-    this.newPasswordCtrl=this.formBuilder.control('',Validators.required),
-    this.newConfirmPasswordCtrl=this.formBuilder.control('',Validators.required)
+    this.emailCtrl=this.formBuilder.control('',[Validators.required,Validators.email]),
+    this.passwordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)]),
+    this.newEmailCtrl=this.formBuilder.control('',[Validators.required,Validators.email]),
+    this.newPasswordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)]),
+    this.newConfirmPasswordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)])
   }
 
   private setLoginValidators(newUser:boolean): void{
@@ -98,15 +108,33 @@ export class StudioAuthPageComponent implements OnInit {
     this.newConfirmPasswordCtrl.updateValueAndValidity();
   }
 
+  getFormControlErrorText(ctrl:AbstractControl) {
+    if(ctrl.invalid && (ctrl.dirty || ctrl.touched)){
+      if(ctrl.hasError('required'))return'This field is required';
+    else if(ctrl.hasError('email')) return 'Please enter a valid email';
+    else if(ctrl.hasError('minlength')) return `This field must be at least ${6} characters long`; 
+    else return " ";
+    }else return " ";
+    
+    }
+
   toggleForm() {
     var newValue=!this.newUser$.value;
     this.newUser$.next(newValue)
     this.toggleFormText= newValue? "I already have an account":"I don't have an account";
+    this.authForm.reset();
+    this.newUserForm.reset();
     }
   
-  submitAuthForm() {this.sendLoggingCredentials(this.authService.login(this.authForm.value));}
+  submitAuthForm() {
+    this.authForm.updateValueAndValidity();
+    this.sendLoggingCredentials(this.authService.login(this.authForm.value));
+  }
 
-  submitNewUserForm() {this.sendLoggingCredentials(this.authService.createNewUser(this.newUserForm.value));}
+  submitNewUserForm() {
+    this.newUserForm.updateValueAndValidity();
+    this.sendLoggingCredentials(this.authService.createNewUser(this.newUserForm.value));
+  }
 
   private sendLoggingCredentials (postResponse: Observable<LoginResponse>):void{
     postResponse.subscribe({
@@ -119,12 +147,11 @@ export class StudioAuthPageComponent implements OnInit {
       error: (err)=>{
           this.authErrorMessage="Login/register operation failed"
         }
-    }
-      
-    
-      
-    );
+    });
     }
     
+    passWordForgottenProcedure() {
+      console.log("Method not implemented");
+      }
 
 }

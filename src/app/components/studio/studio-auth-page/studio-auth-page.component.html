@@ -1,31 +1,50 @@
 <div class="main-content">
-    <span *ngIf="!(newUser$|async)">
-        <h2>Welcome back, please login!</h2>
-        <form [formGroup]="authForm" autocomplete="on" >
-            <label for="email">Email</label>
-            <input id="email"type="email" name="email" autocomplete="email" placeholder="enter your email" [formControl]="emailCtrl" >
-            <label for="password">Password</label>
-            <input id="password" type="password" name="password" autocomplete="current-password" placeholder="enter your password" formControlName="password" >
-            <button type="submit" [disabled]="authForm.invalid" (click)="submitAuthForm()">Login</button>
-        </form>
-    </span>
+    <div class="auth-page">
+        <span *ngIf="!(newUser$|async)">
+            <h2>Welcome back, please login!</h2>
+            <form [formGroup]="authForm" autocomplete="on" >
+                <div class="auth-form">
+                    <label for="email">Email</label>
+                    <input id="email"type="email" name="email" autocomplete="email" placeholder="Enter your email" [formControl]="emailCtrl" >
+                    <div class="error-message"> {{getFormControlErrorText(emailCtrl)}}</div>
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Enter your password" formControlName="password" >
+                    <div class="error-message"> {{getFormControlErrorText(passwordCtrl)}}</div>
+                    <button type="submit"  (click)="submitAuthForm()">Login</button> 
+                    <!-- <label for="stayCeckedIn">Stay checked in</label> -->
+                    <br>
+                    <div class="clickable-link" (click)="passWordForgottenProcedure()">I forgot my password</div>
+                    <div class="clickable-link" (click)="toggleForm()">{{toggleFormText}}</div>
+                </div>
+                
     
-    <span *ngIf="newUser$|async">
-        <h2>Create new account</h2>
-        <form [formGroup]="newUserForm" autocomplete="on">
-            <label for="email">Email</label>
-            <input id="email" type="email" name="email" autocomplete="email" placeholder="enter your email" formControlName="email" >
-            <label for="password">Password</label>
-            <input id="password" type="password" name="password" autocomplete="new-password" placeholder="enter your password" formControlName="password">
-            <label for="confirmPassword">Confirm password</label>
-            <input id="confirmPassword" type="password" name="confirmPassword" autocomplete="new-password" placeholder="confirm your password" formControlName="confirmPassword">
-            <button type="submit" [disabled]="newUserForm.invalid" (click)="submitNewUserForm()">Validate</button>
-
-        </form>
+            </form>
+        </span>
+        
+        <span *ngIf="newUser$|async">
+            <h2>Create new account</h2>
+            <form [formGroup]="newUserForm" autocomplete="on">
+                <div class="auth-form">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" autocomplete="email" placeholder="Enter your email" formControlName="email" >
+                    <div class="error-message"> {{getFormControlErrorText(newEmailCtrl)}}</div>
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" autocomplete="new-password" placeholder="Enter your password" formControlName="password">
+                    <div class="error-message"> {{getFormControlErrorText(newPasswordCtrl)}}</div>
+                    <label for="confirmPassword">Confirm password</label>
+                    <input id="confirmPassword" type="password" name="confirmPassword" autocomplete="new-password" placeholder="Confirm your password" formControlName="confirmPassword">
+                    <div class="error-message"> {{getFormControlErrorText(newConfirmPasswordCtrl)}}</div>
+                    <button type="submit"  (click)="submitNewUserForm()" >Validate</button>
+                    <div class="clickable-link" (click)="toggleForm()">{{toggleFormText}}</div>
+                </div>
+                
+            </form>
+        
+        </span>
+        
+        
+        <div ng *ngIf="loading$|async" class="loading-spinner"></div>
+    </div>
     
-    </span>
-    
-    <div class="clickable-link" (click)="toggleForm()">{{toggleFormText}}</div>
-    <div ng *ngIf="loading$|async" class="loading-spinner"></div>
     
 </div>

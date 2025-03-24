@@ -59,7 +59,6 @@ export class PrivateStudioComponent implements OnInit{
   }
 
   saveForm() {
-    
     this.studioProfileService.updateForm(this.studioProfileId,this.studioProfileForm.getRawValue()).subscribe(
       result=>console.log(result)
     );
