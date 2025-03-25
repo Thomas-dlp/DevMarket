@@ -17,8 +17,7 @@ export class ProjectListComponent implements OnInit {
   
    projects$!:Observable<any[]>;
 
-  constructor(private projectServices: ProjectService,
-              private router: Router,
+  constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               
   ){}

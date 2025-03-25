@@ -9,7 +9,7 @@ export class DevServices{
     
 constructor(private http: HttpClient){}
 
-getDevsbyStudio(studioid:string): Observable<Dev[]>{
+getDevsbyStudio(studioId:string): Observable<Dev[]>{
     return this.http.get<Dev[]>(`${environment.apiUrl}`);
 }
 

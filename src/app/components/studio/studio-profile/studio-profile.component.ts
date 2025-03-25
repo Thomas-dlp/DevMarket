@@ -13,7 +13,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
   templateUrl: './studio-profile.component.html',
   styleUrl: './studio-profile.component.scss'
 })
-export class PrivateStudioComponent implements OnInit{
+export class StudioProfileComponent implements OnInit{
 
   studioProfileId!:string;
   studioProfile$!:Observable<StudioProfile>
