@@ -34,4 +34,9 @@ describe('ProjectListItemComponent', () => {
     
     expect(component).toBeTruthy();
   });
+
+  it('should display main content when project is provided',()=>{
+    const compiled= fixture.nativeElement;
+    expect(compiled.querySelector('.project-list')).toBeTruthy();
+  })
 });

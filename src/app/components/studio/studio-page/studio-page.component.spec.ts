@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudioPageComponent } from './studio-page.component';
-import { StudioPageService } from '../../../services/studio-page-service';
+import { StudioPageService } from '../../../services/studio-page-services/studio-page.service';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 

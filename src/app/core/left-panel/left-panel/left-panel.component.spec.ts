@@ -20,4 +20,8 @@ describe('LeftPanelComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  // it('should toggle tab menu on button click',()=>{
+
+  // });
 });

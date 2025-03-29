@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DevListComponent } from './dev-list.component';
-import { DevServices } from '../../../services/dev-services';
+import { DevService} from '../../../services/dev-services/dev.service';
 import { of } from 'rxjs';
 
 describe('DevListComponent', () => {
@@ -15,7 +15,7 @@ describe('DevListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DevListComponent],
-      providers:[{provide:DevServices,useClass:MockDevService}]
+      providers:[{provide:DevService,useClass:MockDevService}]
     })
     .compileComponents();
 

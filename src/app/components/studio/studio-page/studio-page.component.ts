@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StudioPageService } from '../../../services/studio-page-service';
+import { StudioPageService } from '../../../services/studio-page-services/studio-page.service';
 import { ActivatedRoute, RouterLinkActive } from '@angular/router';
 import { StudioPage } from '../../../templates/studio-page.template';
 import { Observable } from 'rxjs';
@@ -20,7 +20,6 @@ export class StudioPageComponent implements OnInit{
   
   ngOnInit(): void {
     this.studioPageId=this.activeRoute.snapshot.params['id'];
-    console.log(this.studioPageId);
     this.studioPage$=this.studioPageService.getStudioPageById(this.studioPageId);
   }
   

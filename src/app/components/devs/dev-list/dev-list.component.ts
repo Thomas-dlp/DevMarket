@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Dev } from '../../../templates/dev.template';
-import { DevServices } from '../../../services/dev-services';
+import { DevService } from '../../../services/dev-services/dev.service';
 
 @Component({
   selector: 'app-dev-list',
@@ -14,7 +14,7 @@ export class DevListComponent implements OnInit {
 
   devs$!:Observable<Dev[]>;
 
-  constructor(private devService: DevServices){}
+  constructor(private devService: DevService){}
   ngOnInit(): void {
     this.devs$=this.devService.getDevsbyStudio("");
   }

@@ -5,7 +5,7 @@ import { LoginResponse } from "../../templates/login-response.template";
 import {  catchError, delay, finalize, Observable, throwError } from "rxjs";
 import { LoginCredentials } from "../../templates/login-credentials.template";
 import { RegistrationCredentials } from "../../templates/registration-credentials.template";
-import { LoadingService } from "../loading-service";
+import { LoadingService } from "../loading-services/loading.service";
 
 @Injectable()
 export class AuthService{
@@ -27,7 +27,7 @@ export class AuthService{
         this.loadingService.setLoading(true);
         return this.http.post<LoginResponse>(`${environment.apiUrl}/StudioAuth/register`, registrationCredentials).pipe(
             catchError(error=>{
-                console.error("Registration error.Sent from angular",error);
+                console.error("Registration error",error);
                 return throwError(()=>new Error("Registration failed"));
             }),
             finalize(()=>this.loadingService.setLoading(false))

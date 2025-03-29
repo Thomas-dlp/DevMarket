@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Dev } from "../templates/dev.template";
+import { Dev } from "../../templates/dev.template";
 import { Observable } from "rxjs";
-import { environment } from "../../environments/environments";
+import { environment } from "../../../environments/environments";
 
 @Injectable()
-export class DevServices{
+export class DevService{
     
 constructor(private http: HttpClient){}
 

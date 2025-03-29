@@ -5,10 +5,12 @@ import { ProjectListItemComponent } from '../project-list-item/project-list-item
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from '../../../services/project-services/project.service';
 import { of } from 'rxjs';
+import { Project } from '../../../templates/project.template';
 
 describe('ProjectListComponent', () => {
   let component: ProjectListComponent;
   let fixture: ComponentFixture<ProjectListComponent>;
+  let router: Router;
 
   class MockActivatedRoute{
         data=of([""]);
@@ -28,6 +30,7 @@ describe('ProjectListComponent', () => {
     })
     .compileComponents();
 
+    router= TestBed.inject(Router);
     fixture = TestBed.createComponent(ProjectListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -35,5 +38,24 @@ describe('ProjectListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should navigate to component',()=>{
+    const project: Project={
+      title:"",
+      id:10,
+      studioId:"",
+      studioName:"",
+      imageUrl:"",
+      description:"",
+      currentFunding:1,
+      goalFunding:1
+    };
+
+     spyOn(router,"navigateByUrl");
+    component.RouteToComponent(project);
+    fixture.detectChanges();
+
+    expect(router.navigateByUrl).toHaveBeenCalledWith(`projects/10`);
   });
 });

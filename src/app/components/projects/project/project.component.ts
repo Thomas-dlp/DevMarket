@@ -20,7 +20,6 @@ export class ProjectComponent implements OnInit {
   ngOnInit(): void {
     const projectId= this.route.snapshot.params['id'];
     this.project$= this.projectService.getSingleProjectById(projectId);
-    this.project$.pipe(tap(project=>console.log(project.title)),take(1)).subscribe();
   }
 
 

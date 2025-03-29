@@ -11,7 +11,6 @@ export class ProjectService {
 
   getProjects():Observable<Project[]>{
    return this.http.get<Project[]>("http://localhost:8080/getProjects.php"); // todo resolver
-  //  return this.http.get<any>(" http://localhost:3000/candidates"); // test with working backend
   }
 
   getSingleProjectById(id:number): Observable<Project>{
