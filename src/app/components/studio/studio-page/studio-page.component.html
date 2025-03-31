@@ -2,4 +2,39 @@
     <!-- <img class="logo"[src]="studioPage.logoUrl"> -->
     <h2>{{studioPage.name}}</h2>
     <p>{{studioPage.bio}}</p>
+    
+    <div class="display-group">
+        <div class="display-title">Actualities</div>
+        <div class="display-area" *ngIf="studioActualities$|async as actualities" >
+            <div class="display-element" *ngFor="let actuality of actualities" (click)="navigateToItemOrigin(actuality)">
+                <li>{{actuality.imageurl}}</li>
+                <li>{{actuality.title}}</li>
+                <li>{{actuality.text}}</li>
+            </div>
+           
+        </div>
+    </div>
+
+    <div class="display-group">
+        <div class="display-title">Overview</div>
+        <div class="display-area" *ngIf="studioPresentation$|async as presentation">
+            <div class="display-element">
+                {{presentation}}
+            </div>
+            <button (click)="navigateToOverviewByStudioId(studioPageId)">Show all</button> 
+        </div>
+    </div>
+
+    <div class="display-group">
+        <div class="display-title">Devs</div>
+        <div class="display-area" *ngif="studioDevs$|async as devs">
+            <div class="display-element"*ngFor="let dev of devs">
+                {{dev.title}};
+
+            </div>
+            
+            <button (click)="navigateToDevsbyStudioId(studioPageId)">Show all</button>
+            
+        </div>
+    </div>
 </div>

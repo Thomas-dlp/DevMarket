@@ -129,15 +129,15 @@ export class StudioAuthPageComponent implements OnInit {
   
   submitAuthForm() {
     this.authForm.updateValueAndValidity();
-    this.sendLoggingCredentials(this.authService.login(this.authForm.value));
+    this.sendLogginCredentials(this.authService.login(this.authForm.value));
   }
 
   submitNewUserForm() {
     this.newUserForm.updateValueAndValidity();
-    this.sendLoggingCredentials(this.authService.createNewUser(this.newUserForm.value));
+    this.sendLogginCredentials(this.authService.createNewUser(this.newUserForm.value));
   }
 
-  private sendLoggingCredentials (postResponse: Observable<LoginResponse>):void{
+  private sendLogginCredentials (postResponse: Observable<LoginResponse>):void{
     postResponse.subscribe({
       next:
         (response)=>{
