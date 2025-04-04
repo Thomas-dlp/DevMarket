@@ -73,7 +73,7 @@ export class StudioAuthPageComponent implements OnInit {
 
   private initFormControls():void{
     this.emailCtrl=this.formBuilder.control('',[Validators.required,Validators.email]),
-    this.passwordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)]),
+    this.passwordCtrl=this.formBuilder.control('',[Validators.required]),
     this.newEmailCtrl=this.formBuilder.control('',[Validators.required,Validators.email]),
     this.newPasswordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)]),
     this.newConfirmPasswordCtrl=this.formBuilder.control('',[Validators.required,Validators.minLength(this.minPasswordLength)])
@@ -143,7 +143,7 @@ export class StudioAuthPageComponent implements OnInit {
         (response)=>{
          // localStorage.setItem('token',response.token);
     
-        this.route.navigate(['studio/profile', response.id]);
+         this.route.navigate([`studio`, response.id, `profile`]);
         },
       error: (err)=>{
           this.authErrorMessage="Login/register operation failed"

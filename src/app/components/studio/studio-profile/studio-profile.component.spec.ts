@@ -3,7 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import {StudioProfileComponent } from './studio-profile.component';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { StudioProfileService } from '../../../services/studio-profile-services/studio-profile.service';
+import { StudioProfileService } from '../../../services/studio-services/studio.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { StudioProfile } from '../../../templates/studio-profile.template';
@@ -20,7 +20,7 @@ describe('StudioProfileComponent', () => {
   
   
   beforeEach(async () => {
-    studioProfileService = jasmine.createSpyObj('StudioProfileService', ['getStudioProfileById','updateForm']);
+    studioProfileService = jasmine.createSpyObj('StudioProfileService', ['getStudioProfile','updateForm']);
     await TestBed.configureTestingModule({
       imports: [StudioProfileComponent, ReactiveFormsModule],
       providers: [
@@ -53,7 +53,7 @@ describe('StudioProfileComponent', () => {
 
   it('should initialize the form and call patchValue on studioProfile$', () => {
     
-    studioProfileService.getStudioProfileById.and.returnValue(of(mockStudioProfile));
+    studioProfileService.getStudioProfile.and.returnValue(of(mockStudioProfile));
   
     fixture.detectChanges();
   
@@ -65,7 +65,7 @@ describe('StudioProfileComponent', () => {
 
   it('should call SaveForm() on click',()=>{
   
-    studioProfileService.getStudioProfileById.and.returnValue(of(mockStudioProfile));
+    studioProfileService.getStudioProfile.and.returnValue(of(mockStudioProfile));
     
     fixture.detectChanges();
     spyOn(component,'saveForm');
@@ -79,7 +79,7 @@ describe('StudioProfileComponent', () => {
   })
 
   it('should call saveForm() if form is valid', () => {
-    studioProfileService.getStudioProfileById.and.returnValue(of(mockStudioProfile));
+    studioProfileService.getStudioProfile.and.returnValue(of(mockStudioProfile));
 
     const mockResponse = { success: true };
     
@@ -98,7 +98,7 @@ describe('StudioProfileComponent', () => {
   });
   
   it('should not update form if invalid', () => {
-    studioProfileService.getStudioProfileById.and.returnValue(of(mockStudioProfile));
+    studioProfileService.getStudioProfile.and.returnValue(of(mockStudioProfile));
     fixture.detectChanges();
     // Make the form invalid
     component.studioProfileForm.controls['name'].setValue('');
@@ -111,7 +111,7 @@ describe('StudioProfileComponent', () => {
   });
 
   it('should handle error when updateForm fails', () => {
-    studioProfileService.getStudioProfileById.and.returnValue(of(mockStudioProfile));
+    studioProfileService.getStudioProfile.and.returnValue(of(mockStudioProfile));
     fixture.detectChanges();
   
    

@@ -1,8 +1,8 @@
 export interface DisplayableElement{
+    order:number;
+    id:string;
     title:"";
-    id:number;
     text:"";
     imageurl:"";
-    sourceUrl:"";
     //todo: add likes and commnents
 }

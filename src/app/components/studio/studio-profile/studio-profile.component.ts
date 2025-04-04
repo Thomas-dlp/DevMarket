@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLinkActive, RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
-import { StudioProfileService } from '../../../services/studio-profile-services/studio-profile.service';
+import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
+import { map, Observable, tap } from 'rxjs';
+import { StudioService } from '../../../services/studio-services/studio.service';
 import { StudioProfile } from '../../../templates/studio-profile.template';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DisplayableElement } from '../../../templates/displayable-element.template';
+import { environment } from '../../../../environments/environments';
 
 
 @Component({
@@ -15,38 +17,57 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 })
 export class StudioProfileComponent implements OnInit{
 
-  studioProfileId!:string;
-  studioProfile$!:Observable<StudioProfile>
 
-  studioProfileForm!:FormGroup;
+
+  profile$!:Observable<StudioProfile>
+  actualities$!:Observable<DisplayableElement[]>;
+
+  profileForm!:FormGroup;
   nameCtrl!:FormControl;
   logoUrlCtrl!: FormControl;
   backgroudPictureUrlCtrl!: FormControl;
   abstractCtrl!: FormControl;
-  bioCtrl!: FormControl
+  bioCtrl!: FormControl;
+  newDevForm!:FormGroup;
+  devNameCtrl!:FormControl;
+  devLogoUrlCtrl!: FormControl;
+  devDescriptionCtrl!: FormControl;
 
 
-  constructor(private activeRoute: ActivatedRoute, private studioProfileService: StudioProfileService, private formBuilder: FormBuilder){}
+
+  constructor(
+    private activeRoute: ActivatedRoute,
+    protected studioService: StudioService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ){}
+
   ngOnInit(): void {
-    this.studioProfileId=this.activeRoute.snapshot.params['id'];
-    this.studioProfile$=this.studioProfileService.getStudioProfileById(this.studioProfileId);
+    this.studioService.studioId=this.activeRoute.snapshot.params['id'];
+    this.profile$=this.studioService.getStudioProfile();
     this.initFormControls();
     this.initMainForm();
-    this.studioProfile$.subscribe(studioProfile => {
-      console.log('Received studioProfile:', studioProfile);
-      if (studioProfile) {
-        this.studioProfileForm.patchValue(studioProfile);  
+    this.profile$.subscribe(profile => {
+      console.log('Received studioProfile:', profile);
+      if (profile) {
+        this.profileForm.patchValue(profile);  
       }
     });
+    this.actualities$=this.studioService.actualities$.pipe(
+      map(actualities => actualities.sort((a, b) => a.order - b.order))
+    );
+    this.initDevFormControls();
+    this.initDevFormGroup();
+
   }
 
   private initMainForm():void{
-    this.studioProfileForm= this.formBuilder.group({
+    this.profileForm= this.formBuilder.group({
       name: this.nameCtrl,
-      logoUrl:this.logoUrlCtrl,
-      backgroundPictureUrl:this.backgroudPictureUrlCtrl,
-      abstract:this.abstractCtrl,
-      bio:this.bioCtrl
+      logoUrl: this.logoUrlCtrl,
+      backgroundPictureUrl: this.backgroudPictureUrlCtrl,
+      abstract: this.abstractCtrl,
+      bio: this.bioCtrl
     });
   }
 
@@ -58,14 +79,59 @@ export class StudioProfileComponent implements OnInit{
     this.bioCtrl=this.formBuilder.control("");
   }
 
+  initDevFormGroup(){
+    this.newDevForm=this.formBuilder.group({
+      name: this.devNameCtrl,
+      logoUrl: this.devLogoUrlCtrl,
+      description: this.devDescriptionCtrl
+    })
+  }
+  private initDevFormControls(){
+    this.devNameCtrl=this.formBuilder.control("",Validators.required);
+    this.devLogoUrlCtrl=this.formBuilder.control("");
+    this.devDescriptionCtrl=this.formBuilder.control("");
+  }
+
   saveForm() { 
-    if(this.studioProfileForm.invalid){
+    if(this.profileForm.invalid){
       console.log("invalid form");
       return;
     }
-    this.studioProfileService.updateForm(this.studioProfileId,this.studioProfileForm.getRawValue()).subscribe(
+    this.studioService.updateForm(this.profileForm.getRawValue()).subscribe(
       result=>console.log('updated form:',result)
     );
+  }
+
+  createNewDev() {
+    this.newDevForm.updateValueAndValidity();
+    if (this.newDevForm.valid) {
+      this.studioService.createNewDev(this.newDevForm.value).subscribe({
+        next: response => {
+          if (response.headers) {
+            this.router.navigateByUrl(response.headers.get('Location')).then(success => {
+              if (success) {
+                this.newDevForm.reset(); 
+              }
+            });
+          }
+        },
+        error: err => {
+          console.error('Error creating new Dev:', err);
+        },
+        complete: () => {
+          console.log('Create new Dev request completed.');
+        }
+      });
     }
+  }
+
+  modifyActuality(formerActuality:DisplayableElement, newActuality:DisplayableElement) {
+    this.studioService.modifyActualityById(formerActuality.id,newActuality.id);
+  }
+
+  deleteActuality(actuality: DisplayableElement) {
+    this.studioService.deleteActualityById(actuality.id);
+  }
+ 
 
 }

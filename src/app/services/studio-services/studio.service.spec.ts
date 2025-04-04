@@ -1,12 +1,12 @@
 import { TestBed } from "@angular/core/testing";
-import { StudioProfileService } from "./studio-profile.service";
+import { StudioService } from "./studio.service";
 import { HttpClient } from "@angular/common/http";
 import { of } from "rxjs";
 import { environment } from "../../../environments/environments";
 import { StudioProfile } from "../../templates/studio-profile.template";
 
 describe('StudioProfileService',()=>{
-    let service: StudioProfileService;
+    let service: StudioService;
     let http: jasmine.SpyObj<HttpClient>;
     const studioProfile: StudioProfile={
         id: "",
@@ -21,30 +21,31 @@ describe('StudioProfileService',()=>{
         http=  jasmine.createSpyObj(HttpClient,['get','patch']);
         TestBed.configureTestingModule({
             providers:[
-                StudioProfileService,
+                StudioService,
                 {provide: HttpClient, useValue:http},
             ],
         }).compileComponents();
-        service= TestBed.inject(StudioProfileService);
+        service= TestBed.inject(StudioService);
+        service.studioId="testId";
     });
 
     it('should create service',()=>{
             expect(service).toBeTruthy();
         });
     
-        it('should call the right URL on getStudioProfileById',()=>{
+        it('should call the right URL on getStudioProfile',()=>{
             http.get.and.returnValue(of(studioProfile));
     
-            service.getStudioProfileById("testId");
+            service.getStudioProfile();
     
-            expect(http.get).toHaveBeenCalledWith(`${environment.apiUrl}/StudioProfile/testId`);
+            expect(http.get).toHaveBeenCalledWith(`${environment.apiUrl}/Studio/testId/Profile`);
         });
     
         it('should updateForm',()=>{
     
-            service.updateForm("testId",studioProfile);
+            service.updateForm(studioProfile);
     
-            expect(http.patch).toHaveBeenCalledWith(`${environment.apiUrl}/StudioProfile/testId`,studioProfile);
+            expect(http.patch).toHaveBeenCalledWith(`${environment.apiUrl}/Studio/testId/Profile`,studioProfile);
         });
     
 });

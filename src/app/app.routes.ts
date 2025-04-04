@@ -6,9 +6,7 @@ import { ProjectResolver } from '../app/components/projects/project-resolvers/pr
 import { StudioAuthPageComponent } from '../app/components/studio/studio-auth-page/studio-auth-page.component';
 import { AuthService } from './services/auth-services/auth.service';
 import { StudioProfileComponent } from './components/studio/studio-profile/studio-profile.component';
-import { StudioProfileService } from './services/studio-profile-services/studio-profile.service';
 import { StudioPageComponent } from './components/studio/studio-page/studio-page.component';
-import { StudioPageService } from './services/studio-page-services/studio-page.service';
 import { DevListComponent } from './components/devs/dev-list/dev-list.component';
 import { DevService } from './services/dev-services/dev.service';
 
@@ -18,8 +16,8 @@ export const routes: Routes = [
         providers:[ProjectService,ProjectResolver], resolve:{projects:ProjectResolver}},
     {path:'projects/:id', component: ProjectComponent, providers:[ProjectService]},
     {path:'auth-studio',component: StudioAuthPageComponent, providers:[AuthService]},
-    {path:'studio/profile/:id', component: StudioProfileComponent,providers:[StudioProfileService]},
-    {path:'studio/page/:id', component: StudioPageComponent,providers:[StudioPageService]},
+    {path:'studio/:id/profile', component: StudioProfileComponent},
+    {path:'studio/:id/page', component: StudioPageComponent},
     {path:'devs', component: DevListComponent, providers: [DevService]},
     {path:"", component:LandingPageComponent}
     
