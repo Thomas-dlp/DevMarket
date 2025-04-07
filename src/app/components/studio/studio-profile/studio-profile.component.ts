@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DisplayableElement } from '../../../templates/displayable-element.template';
 import { environment } from '../../../../environments/environments';
+import { DevService } from '../../../services/dev-services/dev.service';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class StudioProfileComponent implements OnInit{
   constructor(
     private activeRoute: ActivatedRoute,
     protected studioService: StudioService,
+    private devService: DevService,
     private formBuilder: FormBuilder,
     private router: Router
   ){}
@@ -105,21 +107,28 @@ export class StudioProfileComponent implements OnInit{
   createNewDev() {
     this.newDevForm.updateValueAndValidity();
     if (this.newDevForm.valid) {
-      this.studioService.createNewDev(this.newDevForm.value).subscribe({
+      const payload={
+        ...this.newDevForm.getRawValue(),
+        studioId: this.studioService.studioId
+      };
+      this.devService.createNewDev(payload).subscribe({
         next: response => {
-          if (response.headers) {
-            this.router.navigateByUrl(response.headers.get('Location')).then(success => {
-              if (success) {
-                this.newDevForm.reset(); 
-              }
-            });
-          }
+            if (response.id){
+              console.log(`${environment.apiUrl}/dev/${response.id}`);
+              this.router.navigateByUrl(`dev/${response.id}`).then(success => {
+                if (success) {
+                  this.newDevForm.reset(); 
+                }
+              });
+          
+        }
         },
         error: err => {
-          console.error('Error creating new Dev:', err);
+          console.error('Failed to create new dev:', err);
+          // Optionally show error to user (e.g. toast, dialog)
         },
         complete: () => {
-          console.log('Create new Dev request completed.');
+          console.log('Dev creation request completed.');
         }
       });
     }

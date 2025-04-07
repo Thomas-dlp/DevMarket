@@ -1,24 +1,21 @@
-import { Routes,RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 import { LandingPageComponent } from './core/landing-page/landing-page/landing-page.component';
-import { ProjectService } from './services/project-services/project.service';
-import { ProjectComponent } from '../app/components/projects/project/project.component';
-import { ProjectResolver } from '../app/components/projects/project-resolvers/project-resolver';
 import { StudioAuthPageComponent } from '../app/components/studio/studio-auth-page/studio-auth-page.component';
 import { AuthService } from './services/auth-services/auth.service';
 import { StudioProfileComponent } from './components/studio/studio-profile/studio-profile.component';
 import { StudioPageComponent } from './components/studio/studio-page/studio-page.component';
-import { DevListComponent } from './components/devs/dev-list/dev-list.component';
 import { DevService } from './services/dev-services/dev.service';
+import { DevComponent } from './components/devs/dev/dev.component';
+import { DevResolver } from './components/devs/dev-resolvers/dev-resolver';
 
 export const routes: Routes = [
-    {path:'projects',
-        loadComponent: ()=>import('../app/components/projects/project-list/project-list.component').then(m=>m.ProjectListComponent),
-        providers:[ProjectService,ProjectResolver], resolve:{projects:ProjectResolver}},
-    {path:'projects/:id', component: ProjectComponent, providers:[ProjectService]},
     {path:'auth-studio',component: StudioAuthPageComponent, providers:[AuthService]},
-    {path:'studio/:id/profile', component: StudioProfileComponent},
+    {path:'studio/:id/profile', component: StudioProfileComponent, providers:[DevService]},
     {path:'studio/:id/page', component: StudioPageComponent},
-    {path:'devs', component: DevListComponent, providers: [DevService]},
+    {path:'dev',
+        loadComponent: ()=>import('../app/components/devs/dev-list/dev-list.component').then(m=>m.DevListComponent),
+        providers:[DevService,DevResolver], resolve:{devs:DevResolver}},
+    {path:'dev/:id', component: DevComponent, providers:[DevService]},
     {path:"", component:LandingPageComponent}
     
 ];

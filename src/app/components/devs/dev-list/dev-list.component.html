@@ -1,1 +1,10 @@
-<p>dev-list works!</p>
+<div class="main-content">
+    <p>Devs</p>
+    <div class="list-item">
+        <app-dev-list-item  *ngFor="let dev of devs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>
+      
+
+    </div> 
+    
+
+</div>

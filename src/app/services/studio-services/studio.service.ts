@@ -47,16 +47,7 @@ export class StudioService{
         return this.http.patch(`${environment.apiUrl}/Studio/${this.studioId}/Profile`,studioProfileUpdate);
     }
 
-    createNewDev(newDev:any):Observable<HttpResponse<Dev>>{ 
-        this.loadingService.setLoading(true);
-                return this.http.post<LoginResponse>(`${environment.apiUrl}/Dev`,newDev,{observe: 'response'}).pipe(
-                    catchError(error=>{
-                        console.error("Registration error",error);
-                        return throwError(()=>new Error("Registration failed"));
-                    }),
-                    finalize(()=>this.loadingService.setLoading(false))
-                );
-    }
+    
     
     get actualities$(): Observable<DisplayableElement[]> {
         return this._actualities$.asObservable();
