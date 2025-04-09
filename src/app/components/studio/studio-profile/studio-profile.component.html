@@ -28,14 +28,32 @@
     </form>
 
     <div class="display-group">
-        <div class="display-title">Actualities to display</div>
-        <div class="display-area" *ngIf="actualities$|async as actualities">
-            <div class="display-element" *ngFor="let actuality of actualities">
+        <div class="display-area" (mouseenter)="onMouseEnter()" 
+        (mouseleave)="onMouseLeave()"> 
+            <form>
+                <label>Select an actuality to display</label>
+                <input type="search" [formControl]="actualitySearchBarCtrl" (input)="onActualitySearchBarTextChange()" 
+                 placeholder="Search...">
+                <ul class="suggestions" *ngIf="(actualitySuggestions$ | async) as suggestions" [hidden]="!showSuggestions || suggestions.length === 0" >
+                    <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToActualities(suggestion)">
+                      {{ suggestion.title }}
+                    </li>
+                  </ul>
+            </form>
+        </div>
+        <br>
+        <div class="" *ngIf="actualities$|async as actualities" cdkDropList
+        (cdkDropListDropped)="this.studioService.drop($event)">
+            <div class="actuality-item" *ngFor="let actuality of actualities; let i=index" cdkDrag [attr.data-index]="i">
+                <!-- Placeholder replaces this item while dragging -->
+  <ng-template cdkDragPlaceholder>
+    <div class="placeholder-item"></div>
+  </ng-template>
                 <h1>{{actuality.title}}</h1>
                 <img [src]="actuality.imageurl">
                 <p>{{actuality.text}}</p>
-                <button (click)="modifyActuality(actuality,actuality)">modify</button>
-                <button (click)="deleteActuality(actuality)">delete</button>
+                <!-- <button (click)="modifyActuality(actuality,actuality)">modify</button> -->
+                <button  class="hover-button" (click)="deleteActuality(actuality)" >delete</button>
             </div>
             
         </div>

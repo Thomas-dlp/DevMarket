@@ -11,9 +11,9 @@ export class DevService{
     devs$= this.studioId$.pipe(
         switchMap(id=>{
             if(id){
-                return this.http.get<Dev[]>(`${environment.apiUrl}/Dev?studioId=${id}`) //todo, set a more complete query
+                return this.http.get<Dev[]>(`${environment.apiUrl}/devs?studioId=${id}`) //todo, set a more complete query
             }else{
-               return this.http.get<Dev[]>(`${environment.apiUrl}/Dev`)
+               return this.http.get<Dev[]>(`${environment.apiUrl}/devs`)
             }
         }
         
@@ -26,12 +26,12 @@ export class DevService{
     }
 
     getSingleDevById(id:string): Observable<Dev>{
-       return this.http.get<Dev>(`${environment.apiUrl}/dev/${id}`);
+       return this.http.get<Dev>(`${environment.apiUrl}/devs/${id}`);
     }
 
     createNewDev(newDev:any):Observable<Dev>{ 
             this.loadingService.setLoading(true);
-            var dev= this.http.post<Dev>(`${environment.apiUrl}/Dev`,newDev);
+            var dev= this.http.post<Dev>(`${environment.apiUrl}/devs`,newDev);
             this.loadingService.setLoading(false);
             return dev;
         }

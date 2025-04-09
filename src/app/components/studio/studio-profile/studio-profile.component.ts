@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { StudioService } from '../../../services/studio-services/studio.service';
 import { StudioProfile } from '../../../templates/studio-profile.template';
 import { CommonModule } from '@angular/common';
@@ -8,20 +8,24 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { DisplayableElement } from '../../../templates/displayable-element.template';
 import { environment } from '../../../../environments/environments';
 import { DevService } from '../../../services/dev-services/dev.service';
+import { LightElement } from '../../../templates/light-element.template';
+import { DisplayableElementReference, DisplayableElementType } from '../../../templates/displayable-element-reference.template';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @Component({
   selector: 'app-studio-profile',
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule,DragDropModule],
   templateUrl: './studio-profile.component.html',
   styleUrl: './studio-profile.component.scss'
 })
 export class StudioProfileComponent implements OnInit{
 
-
-
   profile$!:Observable<StudioProfile>
   actualities$!:Observable<DisplayableElement[]>;
+  actualitySuggestions$!: Observable<LightElement[]>;
+
+  showSuggestions: boolean=false;
 
   profileForm!:FormGroup;
   nameCtrl!:FormControl;
@@ -33,6 +37,8 @@ export class StudioProfileComponent implements OnInit{
   devNameCtrl!:FormControl;
   devLogoUrlCtrl!: FormControl;
   devDescriptionCtrl!: FormControl;
+  actualitySearchBarCtrl!: FormControl;
+  
 
 
 
@@ -58,8 +64,11 @@ export class StudioProfileComponent implements OnInit{
     this.actualities$=this.studioService.actualities$.pipe(
       map(actualities => actualities.sort((a, b) => a.order - b.order))
     );
+    this.studioService.getAllActualities();
+
     this.initDevFormControls();
     this.initDevFormGroup();
+    
 
   }
 
@@ -79,6 +88,7 @@ export class StudioProfileComponent implements OnInit{
     this.backgroudPictureUrlCtrl=this.formBuilder.control("");
     this.abstractCtrl=this.formBuilder.control("");
     this.bioCtrl=this.formBuilder.control("");
+    this.actualitySearchBarCtrl=this.formBuilder.control("");
   }
 
   initDevFormGroup(){
@@ -120,8 +130,7 @@ export class StudioProfileComponent implements OnInit{
                   this.newDevForm.reset(); 
                 }
               });
-          
-        }
+            } 
         },
         error: err => {
           console.error('Failed to create new dev:', err);
@@ -134,13 +143,60 @@ export class StudioProfileComponent implements OnInit{
     }
   }
 
+  onActualitySearchBarTextChange() {
+    const actualitySearchBartext= this.actualitySearchBarCtrl.value;
+    if( actualitySearchBartext && actualitySearchBartext.length>2){
+      this.fetchActualitySuggestions(actualitySearchBartext);
+    }else{
+      this.actualitySuggestions$=of([]);
+    }
+    this.actualitySuggestions$.subscribe(result=>console.log("actualitySuggestions:",result));
+  }
+
+  fetchActualitySuggestions(input:string){
+    const lightDevs= this.studioService.getLightDevs();
+    this.actualitySuggestions$= lightDevs.pipe(
+      map(devs=>devs.filter(dev=>dev.title?.toLowerCase().includes(input.toLowerCase())))
+    );
+  }
+
+  addSuggestionToActualities(suggestion: LightElement) {
+    const displayableElementReference: DisplayableElementReference = {
+      DisplayableElementId: suggestion.id,
+      DisplayableElementType: DisplayableElementType.Dev,
+      Order: 1
+    };
+  
+    // Call the service method with the displayableElementReference
+    this.studioService.addActuality(displayableElementReference);
+  }
+  
+
   modifyActuality(formerActuality:DisplayableElement, newActuality:DisplayableElement) {
+    this.showSuggestions = true; 
     this.studioService.modifyActualityById(formerActuality.id,newActuality.id);
+    this.showSuggestions = true; 
   }
 
   deleteActuality(actuality: DisplayableElement) {
     this.studioService.deleteActualityById(actuality.id);
   }
+
+  onMouseEnter() {
+    this.showSuggestions = true;
+  }
+
+  onFocus(){
+    this.showSuggestions = true;
+  }
+
+  onMouseLeave() {
+    // Optional: delay hiding to allow click
+    setTimeout(() => this.showSuggestions = false, 0);
+    this.actualitySearchBarCtrl.reset();
+    this.actualitySuggestions$=of( [])
+  }
  
+  
 
 }

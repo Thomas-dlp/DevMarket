@@ -1,13 +1,13 @@
 export class DisplayableElementReference{
-    id!:"string";
-    type!:DisplayableElementType;
-    order!:number;
+    DisplayableElementId!:string;
+    DisplayableElementType!:DisplayableElementType;
+    Order!:number;
 
 }
 
 export enum DisplayableElementType{
-    Dev,
-    Post,
-    TradingStatus,
+    Dev ,
+    Post ,
+    TradingStatus
 
 }

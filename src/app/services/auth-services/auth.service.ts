@@ -14,7 +14,7 @@ export class AuthService{
 
     login(loginCredentials:LoginCredentials):Observable<LoginResponse>{
         this.loadingService.setLoading(true);
-        return this.http.post<LoginResponse>(`${environment.apiUrl}/StudioAuth/login`, loginCredentials).pipe(
+        return this.http.post<LoginResponse>(`${environment.apiUrl}/studio-auth/login`, loginCredentials).pipe(
             catchError(error=>{
                 console.error("Login error",error);
                 return throwError(()=>new Error("Login failed"));
@@ -25,7 +25,7 @@ export class AuthService{
 
     createNewUser(registrationCredentials: RegistrationCredentials):Observable<LoginResponse>{
         this.loadingService.setLoading(true);
-        return this.http.post<LoginResponse>(`${environment.apiUrl}/StudioAuth/register`, registrationCredentials).pipe(
+        return this.http.post<LoginResponse>(`${environment.apiUrl}/studio-auth/register`, registrationCredentials).pipe(
             catchError(error=>{
                 console.error("Registration error",error);
                 return throwError(()=>new Error("Registration failed"));
