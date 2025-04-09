@@ -1,5 +1,31 @@
 <div class="main-content">
     <p>Devs</p>
+    <div>
+        <form>
+            <label>SearchBar</label>
+            <input type="search" [formControl]="searchCtrl">
+        </form>
+    </div>
+    <div>
+        <div>Select a filter</div>
+        <select>
+           <option value="studio">Studio</option>
+            <option value="genre">Genre</option>
+        </select>
+        <form>
+            <input type="search" [formControl]="filterCtrl">
+        </form>
+    </div>
+    <div>
+        <label>number of dev per page</label>
+        <select id="itemsPerPage" (change)="onItemsPerPageChange()">
+            
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="all">All</option>
+         </select>
+        
     <div class="list-item">
         <app-dev-list-item  *ngFor="let dev of devs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>
       

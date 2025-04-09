@@ -44,3 +44,19 @@ p{
     
 
 }
+
+.display-group{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+    padding: 20px;
+    width: 35%;
+    background-color: aquamarine;
+    margin-inline-start: 100px;
+}
+
+.display-area {
+    position: relative; /* anchor for absolute dropdown */
+    width: 100%;
+  }

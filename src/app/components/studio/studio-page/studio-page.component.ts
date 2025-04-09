@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StudioService } from '../../../services/studio-services/studio.service';
 import { ActivatedRoute, Route, Router, RouterLinkActive } from '@angular/router';
 import { StudioPage } from '../../../templates/studio-page.template';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf, NgStyle } from '@angular/common';
 import { Studio } from '../../../templates/studio.template';
 import { DisplayableElement } from '../../../templates/displayable-element.template';
@@ -31,6 +31,9 @@ export class StudioPageComponent implements OnInit{
   ngOnInit(): void {
     this.studioService.studioId=this.activeRoute.snapshot.params['id']; //todo: manage the id beetween the two components calling the service
     this.studioPage$=this.studioService.getStudioPage();
+    this.studioActualities$=this.studioService.actualities$.pipe(
+      map(actualities=>actualities.sort((a,b)=>a.order-b.order))
+    )
   }
 
   navigateToOverview() {
