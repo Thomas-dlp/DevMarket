@@ -8,22 +8,26 @@
     </div>
     <div>
         <div>Select a filter</div>
-        <select>
+        <select (change)="setFilterlinkedToForm($event)">
            <option value="studio">Studio</option>
-            <option value="genre">Genre</option>
+           <option value="genre">Genre</option>
         </select>
-        <form>
-            <input type="search" [formControl]="filterCtrl">
+        <form (mouseenter)="onMouseEnter()" 
+        (mouseleave)="onMouseLeave()"> >
+            <input type="search" [formControl]="filterCtrl" placeholder="Studio">
+            <ul class="suggestions" *ngIf="(filterSuggestions$ | async) as suggestions" [hidden]="!showFilterSuggestions || suggestions.length === 0" >
+                <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToFilters(suggestion)">
+                  {{ suggestion.title }}
+                </li>
+              </ul>
         </form>
     </div>
     <div>
         <label>number of dev per page</label>
-        <select id="itemsPerPage" (change)="onItemsPerPageChange()">
-            
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="all">All</option>
+        <select id="itemsPerPage" [formControl]="elementByPageCtrl">
+            <option value=20>20</option>
+            <option value=50>50</option>
+            <option value=100>100</option>
          </select>
         
     <div class="list-item">

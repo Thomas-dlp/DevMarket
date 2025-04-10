@@ -4,6 +4,7 @@ import { Dev } from "../../templates/dev.template";
 import { BehaviorSubject, map, Observable, switchMap } from "rxjs";
 import { environment } from "../../../environments/environments";
 import { LoadingService } from "../loading-services/loading.service";
+import { LightElement } from "../../templates/light-element.template";
 
 @Injectable()
 export class DevService{
@@ -11,13 +12,14 @@ export class DevService{
     devs$= this.studioId$.pipe(
         switchMap(id=>{
             if(id){
-                return this.http.get<Dev[]>(`${environment.apiUrl}/devs?studioId=${id}`) //todo, set a more complete query
+                return this.http.get<Dev[]>(`${environment.apiUrl}/devs?studioId=${id}`) 
             }else{
                return this.http.get<Dev[]>(`${environment.apiUrl}/devs`)
             }
         }
         
     ));
+
     
     constructor(private http: HttpClient, private loadingService: LoadingService){}
 
@@ -28,6 +30,16 @@ export class DevService{
     getSingleDevById(id:string): Observable<Dev>{
        return this.http.get<Dev>(`${environment.apiUrl}/devs/${id}`);
     }
+
+    getLightStudios():Observable<LightElement[]>{
+        return this.http.get<LightElement[]>(`${environment.apiUrl}/studios/light`);
+    }
+
+    getLightTags():Observable<LightElement[]>{
+        return this.http.get<LightElement[]>(`${environment.apiUrl}/tags/light`);
+    }
+
+    
 
     createNewDev(newDev:any):Observable<Dev>{ 
             this.loadingService.setLoading(true);
