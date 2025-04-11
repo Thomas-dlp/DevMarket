@@ -4,18 +4,23 @@
         <form>
             <label>SearchBar</label>
             <input type="search" [formControl]="searchCtrl">
+            <ul class="suggestions" *ngIf="titleSuggestions$ | async as suggestions">
+                <li *ngFor="let suggestion of suggestions" (click)="autoCompleteSuggestion(suggestion)">
+                  {{ suggestion }}
+                </li>
+              </ul>
         </form>
     </div>
-    <div>
+    <div class="display-area">
         <div>Select a filter</div>
-        <select (change)="setFilterlinkedToForm($event)">
-           <option value="studio">Studio</option>
-           <option value="genre">Genre</option>
+        <select [value]="filterLinkedToform$.value" (change)="setFilterlinkedToForm($event)">
+           <option value="studios">Studios</option>
+           <option value="tags">Tags</option>
         </select>
         <form (mouseenter)="onMouseEnter()" 
-        (mouseleave)="onMouseLeave()"> >
+        (mouseleave)="onMouseLeave()"> 
             <input type="search" [formControl]="filterCtrl" placeholder="Studio">
-            <ul class="suggestions" *ngIf="(filterSuggestions$ | async) as suggestions" [hidden]="!showFilterSuggestions || suggestions.length === 0" >
+            <ul class="suggestions" *ngIf="filterSuggestions$ | async as suggestions">
                 <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToFilters(suggestion)">
                   {{ suggestion.title }}
                 </li>

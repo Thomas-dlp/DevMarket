@@ -34,7 +34,7 @@
                 <label>Select an actuality to display</label>
                 <input type="search" [formControl]="actualitySearchBarCtrl" (input)="onActualitySearchBarTextChange()" 
                  placeholder="Search...">
-                <ul class="suggestions" *ngIf="(actualitySuggestions$ | async) as suggestions" [hidden]="!showSuggestions || suggestions.length === 0" >
+                <ul class="suggestions" *ngIf="(actualitySuggestions$ | async) as suggestions" [hidden]="suggestions.length === 0" >
                     <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToActualities(suggestion)">
                       {{ suggestion.title }}
                     </li>

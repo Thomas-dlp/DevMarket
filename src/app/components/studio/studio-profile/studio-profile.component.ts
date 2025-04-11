@@ -186,15 +186,14 @@ export class StudioProfileComponent implements OnInit{
     this.showSuggestions = true;
   }
 
-  onFocus(){
-    this.showSuggestions = true;
-  }
-
   onMouseLeave() {
-    // Optional: delay hiding to allow click
-    setTimeout(() => this.showSuggestions = false, 0);
-    this.actualitySearchBarCtrl.reset();
-    this.actualitySuggestions$=of( [])
+    this.showSuggestions=false;
+    setTimeout(() =>{
+      if( this.showSuggestions === false){
+        this.actualitySearchBarCtrl.reset();
+      }
+    } , 100);
+    
   }
  
   
