@@ -128,9 +128,9 @@ export class DevListComponent implements OnInit {
   }
 
   addSuggestionToFilters(suggestion:LightElement){
-    if(this.filterLinkedToform$.getValue()=="studio"){
+    if(this.filterLinkedToform$.getValue()=="studios"){
       this.devService.setStudioId(suggestion.id);
-    }else if(this.filterLinkedToform$.getValue()=="tag"){
+    }else if(this.filterLinkedToform$.getValue()=="tags"){
       const currentTags=this.tagFilter$.value;
       const matchingTag=currentTags.find(tag=>tag===suggestion.title);
       let newTags= currentTags;
@@ -157,6 +157,11 @@ export class DevListComponent implements OnInit {
      
   }
 
+  deleteTag(input:string){
+    const currentTags= this.tagFilter$.getValue();
+    const updatedTags= currentTags.filter(tag=>tag!==input)
+    this.tagFilter$.next(updatedTags);
+  }
  
 
 

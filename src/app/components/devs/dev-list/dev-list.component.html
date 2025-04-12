@@ -12,6 +12,12 @@
         </form>
     </div>
     <div class="display-area">
+        <div class="filters" *ngIf="tagFilter$|async as tags">
+            <ul *ngFor="let tag of tags">
+                <li>{{tag}}</li>
+                <button  class="hover-button" (click)="deleteTag(tag)" >X</button>
+            </ul>
+        </div>
         <div>Select a filter</div>
         <select [value]="filterLinkedToform$.value" (change)="setFilterlinkedToForm($event)">
            <option value="studios">Studios</option>
@@ -27,6 +33,10 @@
               </ul>
         </form>
     </div>
+    <div >  
+    </div>
+    
+    
     <div>
         <label>number of dev per page</label>
         <select id="itemsPerPage" [formControl]="elementByPageCtrl">
