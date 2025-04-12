@@ -1,31 +1,43 @@
 <div class="main-content">
     <p>Devs</p>
-    <div>
-        <form>
+    <div class="display-area">
+        <form  (mouseenter)="onMouseEnterTitleForm()" 
+        (mouseleave)="onMouseLeaveTitleForm()">
             <label>SearchBar</label>
-            <input type="search" [formControl]="searchCtrl">
-            <ul class="suggestions" *ngIf="titleSuggestions$ | async as suggestions">
-                <li *ngFor="let suggestion of suggestions" (click)="autoCompleteSuggestion(suggestion)">
-                  {{ suggestion }}
-                </li>
-              </ul>
+            <input  type="search" [formControl]="searchCtrl" placeholder="Search by title...">
+            <ng-container *ngIf="showTitleSuggestions">   
+                <ul class="suggestions" *ngIf="titleSuggestions$ | async as suggestions">
+                
+                    <li *ngFor="let suggestion of suggestions" (click)="autoCompleteSuggestion(suggestion)">
+                        {{ suggestion }}
+                    </li>
+                    </ul>
+            </ng-container>       
         </form>
     </div>
+   
     <div class="display-area">
+        <div class="filters">
+            <div class="studio-filter" *ngIf="studioName$|async as studioName">
+                {{studioName}}
+                <button  class="studio-filter-hover-button" (click)="deleteStudioFilter(studioName)" >X</button>
+            </div>
+        </div>
+        
         <div class="filters" *ngIf="tagFilter$|async as tags">
-            <ul *ngFor="let tag of tags">
-                <li>{{tag}}</li>
-                <button  class="hover-button" (click)="deleteTag(tag)" >X</button>
-            </ul>
+            <li class="filter" *ngFor="let tag of tags">
+                {{tag}}
+                <button  class="hover-button" (click)="deleteTagFilter(tag)" >X</button>
+            </li>
         </div>
         <div>Select a filter</div>
         <select [value]="filterLinkedToform$.value" (change)="setFilterlinkedToForm($event)">
            <option value="studios">Studios</option>
            <option value="tags">Tags</option>
         </select>
-        <form (mouseenter)="onMouseEnter()" 
-        (mouseleave)="onMouseLeave()"> 
-            <input type="search" [formControl]="filterCtrl" placeholder="Studio">
+        <form (mouseenter)="onMouseEnterFilterForm()" 
+        (mouseleave)="onMouseLeaveFilterForm()"> 
+            <input type="search" [formControl]="filterCtrl" [placeholder]= "`Search ${filterLinkedToform$.getValue()}...`">
             <ul class="suggestions" *ngIf="filterSuggestions$ | async as suggestions">
                 <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToFilters(suggestion)">
                   {{ suggestion.title }}
@@ -40,13 +52,14 @@
     <div>
         <label>number of dev per page</label>
         <select id="itemsPerPage" [formControl]="elementByPageCtrl">
+            <option value=5>5</option>
             <option value=20>20</option>
             <option value=50>50</option>
             <option value=100>100</option>
          </select>
         
     <div class="list-item">
-        <app-dev-list-item  *ngFor="let dev of devs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>
+        <app-dev-list-item  *ngFor="let dev of filteredDevs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>
       
 
     </div> 

@@ -1,0 +1,27 @@
+<div class="display-group">
+    <div class="display-title">Create new dev</div>
+    <div class="display-area" *ngIf="newDevForm" >
+        <div class="display-element">
+            <form [formGroup]="newDevForm">
+                <li>
+                    <label>Name</label>
+                    <input type="string" formControlName="name">
+                </li>
+        
+                <li>
+                    <label>LogoUrl</label>
+                    <input type=string formControlName="logoUrl">
+                   
+                </li>
+               
+                <li>
+                    <label>Description</label>
+                    <input type=string formControlName="description">
+                </li>
+                <button type="submit" (click)="createNewDev()">Save</button>
+                
+            </form>
+        </div>
+        
+    </div>
+</div>

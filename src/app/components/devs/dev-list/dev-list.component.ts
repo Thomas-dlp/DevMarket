@@ -15,22 +15,24 @@ import { LightElement } from '../../../templates/light-element.template';
   styleUrl: './dev-list.component.scss'
 })
 export class DevListComponent implements OnInit {
-  
 
-  devs$!:Observable<Dev[]>;
+  devs$!: Observable<Dev[]>;
+  studioName$!:Observable<string>;
   filteredDevs$!:Observable<Dev[]>;
   filterSuggestions$!: Observable<LightElement[]>;
   titleSuggestions$!: Observable<string[]>;
-
+  
   tagFilter$= new BehaviorSubject<string[]>([]);
   filterLinkedToform$= new BehaviorSubject<string>("studios");
   
   showFilterSuggestions:boolean=false;
   showTitleSuggestions:boolean=false;
 
+
   searchCtrl!: FormControl;
   filterCtrl!: FormControl;
   elementByPageCtrl!: FormControl;
+
 
   constructor(private devService: DevService,
               private activeRoute: ActivatedRoute,
@@ -44,20 +46,22 @@ export class DevListComponent implements OnInit {
       if(studioId){
         this.devService.setStudioId(studioId);
       };
-      this.filterSuggestions$=this.setFilterSuggestions();
-      this.titleSuggestions$=this.setTitleSuggestions();
     });
-    
-    
-    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges,this.tagFilter$,this.elementByPageCtrl.valueChanges
+    this.studioName$=this.devService.studioName$;
+    this.filterSuggestions$=this.setFilterSuggestions();
+    this.titleSuggestions$=this.setTitleSuggestions();
+    this.devs$=this.devService.devs$;
+    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges.pipe(startWith("")),this.tagFilter$.pipe(startWith([""])),this.elementByPageCtrl.valueChanges.pipe(startWith(20))
     ]).pipe(
       map(([devs,title,tags,capacity])=>
         devs.filter(dev=>
           (title ? dev.title.toLowerCase().includes(title.toLowerCase()) : true) &&
-          (tags?.some(tag => tags.includes(tag)) ?? true)
-        ).slice(0,parseInt(capacity.value,10))
+          (tags.some(tag => dev.tags?.includes(tag)) || tags.length === 0)
+        ).slice(0,parseInt(capacity,10))
       )
     );
+    this.filteredDevs$.subscribe(devs=>console.log("filteredDevs:",devs))
+    this.devService.loadDevs();
   }
 
   initFormControls(){
@@ -65,9 +69,6 @@ export class DevListComponent implements OnInit {
     this.searchCtrl=new FormControl("");
     this.filterCtrl= new FormControl("");
   }
-  // changeStudio(studioId:string){
-  //   this.devService.setStudioId(studioId);
-  // }
 
   routeToComponent(dev:Dev){
     this.router.navigateByUrl(`dev/${dev.id}`);
@@ -140,14 +141,23 @@ export class DevListComponent implements OnInit {
     }
   }
 
-  onMouseEnter() {
+  onMouseEnterTitleForm() {
+    this.showTitleSuggestions = true;
+    console.log("enter mouse");
+  }
+
+  onMouseLeaveTitleForm() {
+    setTimeout(() =>{
+    this.showTitleSuggestions=false;
+    console.log("leave mouse");},100)
+  }
+
+  onMouseEnterFilterForm() {
     this.showFilterSuggestions = true;
     
   }
 
-  onMouseLeave() {
-    // Optional: delay hiding to allow click
-    // setTimeout(() => this.showFilterSuggestions = false, 0);
+  onMouseLeaveFilterForm() {
     this.showFilterSuggestions=false;
     setTimeout(() =>{
       if(this.showFilterSuggestions===false){
@@ -157,7 +167,11 @@ export class DevListComponent implements OnInit {
      
   }
 
-  deleteTag(input:string){
+  deleteStudioFilter(input: string){
+    this.devService.setStudioId("");
+  }
+
+  deleteTagFilter(input:string){
     const currentTags= this.tagFilter$.getValue();
     const updatedTags= currentTags.filter(tag=>tag!==input)
     this.tagFilter$.next(updatedTags);

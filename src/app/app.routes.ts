@@ -12,7 +12,7 @@ export const routes: Routes = [
     {path:'auth-studio',component: StudioAuthPageComponent, providers:[AuthService]},
     {path:'studio/:id/profile', component: StudioProfileComponent, providers:[DevService]},
     {path:'studio/:id/page', component: StudioPageComponent},
-    {path:'dev',
+    {path:'devs',
         loadComponent: ()=>import('../app/components/devs/dev-list/dev-list.component').then(m=>m.DevListComponent),
         providers:[DevService,DevResolver], resolve:{devs:DevResolver}},
     {path:'dev/:id', component: DevComponent, providers:[DevService]},
