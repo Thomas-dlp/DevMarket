@@ -7,10 +7,11 @@ import { StudioPageComponent } from './components/studio/studio-page/studio-page
 import { DevService } from './services/dev-services/dev.service';
 import { DevComponent } from './components/devs/dev/dev.component';
 import { DevResolver } from './components/devs/dev-resolvers/dev-resolver';
+import { StudioProfileGuard } from './core/guards/studio-profile-guard/studio-profile.guard';
 
 export const routes: Routes = [
     {path:'auth-studio',component: StudioAuthPageComponent, providers:[AuthService]},
-    {path:'studio/:id/profile', component: StudioProfileComponent, providers:[DevService]},
+    {path:'studio/:id/profile', component: StudioProfileComponent, canActivate:[StudioProfileGuard], providers:[DevService]},
     {path:'studio/:id/page', component: StudioPageComponent},
     {path:'devs',
         loadComponent: ()=>import('../app/components/devs/dev-list/dev-list.component').then(m=>m.DevListComponent),

@@ -1,11 +1,10 @@
 .header{
     background-color: lightgray;
     display: flex;
-    flex-direction: column; // Stack the text and list vertically
+    flex-direction: row; // Stack the text and list vertically
     justify-content: center; // Centers content horizontally
     align-items: center; // Centers content vertically
     width: 100%; // Ensure it takes up the full width of the parent container
-    
     padding: 0px;
     border: 0px;
     margin: 0px;
@@ -16,7 +15,11 @@
     font-size: 20pt;
 }
 
-
+.central-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}  
 
 
 ul {
@@ -34,3 +37,11 @@ ul {
     }
 }
 
+.login-button{
+    position: absolute;
+    right: 1rem;
+    top: 0%;
+    transform: translateY(-50%);
+    margin-top: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

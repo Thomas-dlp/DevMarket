@@ -1,9 +1,14 @@
 <div class="header">
-    <h1>Dev Market </h1>
-    <ul>
-        <li><a routerLink="">Menu</a></li>    
-        <li><a routerLink="devs">Devs</a></li>
-        <li><a routerLink="auth-studio">Studio</a></li>
-    </ul>
-
+    <div class="central-elements">
+        <h1>Dev Market </h1>
+        <ul>
+            <li><a routerLink="">Home</a></li>    
+            <li><a routerLink="devs">Devs</a></li>
+            <li><a [routerLink]="['/studio', studioId,'profile']">Studio Settings</a></li>
+        </ul>
+    </div>
+    
+    
+    <app-login class="login-button"></app-login>   
 <div>
+ 
