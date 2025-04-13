@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environments";
 import { LoginResponse } from "../../templates/login-response.template";
-import {  catchError, delay, finalize, Observable, throwError } from "rxjs";
+import {  catchError, delay, finalize, Observable, tap, throwError } from "rxjs";
 import { LoginCredentials } from "../../templates/login-credentials.template";
 import { RegistrationCredentials } from "../../templates/registration-credentials.template";
 import { LoadingService } from "../loading-services/loading.service";
@@ -15,6 +15,9 @@ export class AuthService{
     login(loginCredentials:LoginCredentials):Observable<LoginResponse>{
         this.loadingService.setLoading(true);
         return this.http.post<LoginResponse>(`${environment.apiUrl}/studio-auth/login`, loginCredentials).pipe(
+            tap(response => {
+                console.log("saving token:",response.token);
+                sessionStorage.setItem('authToken', response.token);}),
             catchError(error=>{
                 console.error("Login error",error);
                 return throwError(()=>new Error("Login failed"));

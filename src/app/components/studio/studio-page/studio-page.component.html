@@ -27,7 +27,7 @@
 
     <div class="display-group">
         <div class="display-title">Devs</div>
-        <div class="display-area" *ngif="studioDevs$|async as devs">
+        <div class="display-area" *ngIf="studioDevs$|async as devs">
             <div class="display-element"*ngFor="let dev of devs">
                 {{dev.title}};
 

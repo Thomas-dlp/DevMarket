@@ -7,9 +7,7 @@ import { DisplayableElement } from "../../templates/displayable-element.template
 import { Studio } from "../../templates/studio.template";
 import { StudioPage } from "../../templates/studio-page.template";
 import { LightElement } from "../../templates/light-element.template";
-import { LoginResponse } from "../../templates/login-response.template";
 import { LoadingService } from "../loading-services/loading.service";
-import { Dev } from "../../templates/dev.template";
 import { DisplayableElementReference } from "../../templates/displayable-element-reference.template";
 import {
     CdkDragDrop,

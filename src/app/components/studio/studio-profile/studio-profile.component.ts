@@ -44,7 +44,9 @@ export class StudioProfileComponent implements OnInit{
 
   ngOnInit(): void {
     this.studioService.studioId=this.activeRoute.snapshot.params['id'];
+    console.log("studioId:", this.studioService.studioId);
     this.profile$=this.studioService.getStudioProfile();
+    this.profile$.subscribe(profile=>console.log("profile name:", profile.name));
   }
 
   selectTab(tabId:number){
