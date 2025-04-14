@@ -11,18 +11,6 @@ export class DevService{
     private studioId$= new BehaviorSubject<string|null>(null);
     private devsSubject = new BehaviorSubject<Dev[]>([]);
     devs$=this.devsSubject.asObservable();
-    studioName$= this.studioId$.pipe(
-        switchMap(id=>{
-            if(id){
-               
-                return this.getLightStudios().pipe(
-                    map(studios=>studios?.find(studio=>studio.id===id)?.title??"")
-                );
-            }else{
-               return of("");
-            }
-        })
-    );
 
    
     constructor(private http: HttpClient, private loadingService: LoadingService){}
@@ -30,6 +18,7 @@ export class DevService{
 
     setStudioId(id:string):void {
         this.studioId$.next(id);
+        this.loadDevs();
     }
 
 

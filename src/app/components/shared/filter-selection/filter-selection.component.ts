@@ -58,7 +58,7 @@ export class FilterSelectionComponent implements OnInit{
   }
 
   addSuggestionToFilters(suggestion:LightElement){
-    this._selectedFilter$.next({type:this.selectedFilterTypeName$.getValue(),output:suggestion.title})
+    this._selectedFilter$.next({type:this.selectedFilterTypeName$.getValue(),output:suggestion.title});
   }
 
   onMouseEnterFilterForm() {

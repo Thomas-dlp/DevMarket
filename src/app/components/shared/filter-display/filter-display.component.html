@@ -1,14 +1,9 @@
-<!-- <div class="display-area">
-    <div class="filters">
-        <div class="studio-filter" *ngIf="studioName$|async as studioName">
-            {{studioName}}
-            <button  class="studio-filter-hover-button" (click)="deleteStudioFilter(studioName)" >X</button>
-        </div>
-    </div> //todo move all this+ dekete functions
+<div class="display-area">
     
-    <div class="filters" *ngIf="tagFilter$|async as tags">
-        <li class="filter" *ngFor="let tag of tags">
-            {{tag}}
-            <button  class="hover-button" (click)="deleteTagFilter(tag)" >X</button>
+    
+    <div class="filters" >
+        <li class="filter" *ngFor="let filter of filters">
+            {{filter}}
+            <button  class="hover-button" (click)="deleteFilter(filter)" >X</button>
         </li>
-    </div> -->
+    </div>

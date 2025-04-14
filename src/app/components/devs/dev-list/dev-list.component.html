@@ -1,11 +1,10 @@
 <div class="main-content">
     <p>Devs</p>
     <div class="display-area">
-        <form  (mouseenter)="onMouseEnterTitleForm()" 
-        (mouseleave)="onMouseLeaveTitleForm()">
+        <form  >
             <label>SearchBar</label>
             <input  type="search" [formControl]="searchCtrl" placeholder="Search by title...">
-            <ng-container *ngIf="showTitleSuggestions">   
+            <ng-container>   
                 <ul class="suggestions" *ngIf="titleSuggestions$ | async as suggestions">
                 
                     <li *ngFor="let suggestion of suggestions" (click)="autoCompleteSuggestion(suggestion)">
@@ -16,7 +15,8 @@
         </form>
     </div>
   
-    <app-filter-display></app-filter-display>
+    <app-filter-display  [filters]="tagFilters$.getValue()" (filtersChange)="tagFilters$.next($event)"></app-filter-display>
+    <app-filter-display  [filters]="studioFilter$.getValue()" (filtersChange)="onStudioFilterDeletion()"></app-filter-display>
     <app-filter-selection [filterSelection$]="filterSelection$" (selectedFilter$)="addNewFilter($event)"></app-filter-selection>
     
     

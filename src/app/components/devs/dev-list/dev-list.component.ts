@@ -21,15 +21,13 @@ export class DevListComponent implements OnInit {
 
   devs$!: Observable<Dev[]>;
   studioName$!:Observable<string>;
-  studioId$!:Observable<string>;
   filteredDevs$!:Observable<Dev[]>;
   filterSelection$!:Observable<FilterSelection[]>;
   titleSuggestions$!: Observable<string[]>;
   
   tagFilters$= new BehaviorSubject<string[]>([]);
+  studioFilter$= new BehaviorSubject<string[]>([]);
   
-  
-  showTitleSuggestions:boolean=false;
 
 
   searchCtrl!: FormControl;
@@ -52,7 +50,6 @@ export class DevListComponent implements OnInit {
         this.devService.setStudioId(studioId);
       };
     });
-    this.studioName$=this.devService.studioName$;
     
     this.titleSuggestions$=this.setTitleSuggestions();
     this.devs$=this.devService.devs$;
@@ -80,9 +77,10 @@ export class DevListComponent implements OnInit {
   }
 
  addNewFilter(filter:{type:string,output:string}){
-    if(filter.type.toLocaleLowerCase()==='Studios'){
+    if(filter.type==='Studios'){
       this.devService.setStudioId(filter.output);
-    }else if(filter.type.toLocaleLowerCase()==='Tags'){
+      this.studioFilter$.next([filter.output]);
+    }else if(filter.type==='Tags'){
       const previousFilters= this.tagFilters$.getValue();
       const newFilter = filter.output;
       if (!previousFilters.includes(newFilter)){
@@ -103,6 +101,12 @@ export class DevListComponent implements OnInit {
     );
   }
 
+  
+  onStudioFilterDeletion(){
+    this.devService.setStudioId("");
+    this.studioFilter$.next([]);
+  }
+
   setTitleSuggestions():Observable<string[]>{
     return this.searchCtrl.valueChanges.pipe(
       debounceTime(300),
@@ -116,27 +120,9 @@ export class DevListComponent implements OnInit {
   }
 
   
-  
   autoCompleteSuggestion(suggestion:string){
     this.searchCtrl.setValue(suggestion);
   }
-
- 
-
-  onMouseEnterTitleForm() {
-    this.showTitleSuggestions = true;
-    console.log("enter mouse");
-  }
-
-  onMouseLeaveTitleForm() {
-    setTimeout(() =>{
-    this.showTitleSuggestions=false;
-    console.log("leave mouse");},100)
-  }
-
-  
- 
-
 
 
 }
