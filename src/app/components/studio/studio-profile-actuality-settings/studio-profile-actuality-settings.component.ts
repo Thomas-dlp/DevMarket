@@ -10,6 +10,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-studio-profile-actuality-settings',
+  standalone:true,
   imports: [CommonModule, ReactiveFormsModule,DragDropModule],
   templateUrl: './studio-profile-actuality-settings.component.html',
   styleUrl: './studio-profile-actuality-settings.component.scss'

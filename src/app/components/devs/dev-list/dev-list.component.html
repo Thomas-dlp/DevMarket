@@ -15,38 +15,9 @@
             </ng-container>       
         </form>
     </div>
-   
-    <div class="display-area">
-        <div class="filters">
-            <div class="studio-filter" *ngIf="studioName$|async as studioName">
-                {{studioName}}
-                <button  class="studio-filter-hover-button" (click)="deleteStudioFilter(studioName)" >X</button>
-            </div>
-        </div>
-        
-        <div class="filters" *ngIf="tagFilter$|async as tags">
-            <li class="filter" *ngFor="let tag of tags">
-                {{tag}}
-                <button  class="hover-button" (click)="deleteTagFilter(tag)" >X</button>
-            </li>
-        </div>
-        <div>Select a filter</div>
-        <select [value]="filterLinkedToform$.value" (change)="setFilterlinkedToForm($event)">
-           <option value="studios">Studios</option>
-           <option value="tags">Tags</option>
-        </select>
-        <form (mouseenter)="onMouseEnterFilterForm()" 
-        (mouseleave)="onMouseLeaveFilterForm()"> 
-            <input type="search" [formControl]="filterCtrl" [placeholder]= "`Search ${filterLinkedToform$.getValue()}...`">
-            <ul class="suggestions" *ngIf="filterSuggestions$ | async as suggestions">
-                <li *ngFor="let suggestion of suggestions" (click)="addSuggestionToFilters(suggestion)">
-                  {{ suggestion.title }}
-                </li>
-              </ul>
-        </form>
-    </div>
-    <div >  
-    </div>
+  
+    <app-filter-display></app-filter-display>
+    <app-filter-selection [filterSelection$]="filterSelection$" (selectedFilter$)="addNewFilter($event)"></app-filter-selection>
     
     
     <div>

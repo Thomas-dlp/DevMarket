@@ -6,11 +6,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DevListItemComponent } from "../dev-list-item/dev-list-item.component";
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { LightElement } from '../../../templates/light-element.template';
+import { FilterSelection } from '../../../templates/filter-selection.template';
+import { FilterSelectionComponent } from '../../shared/filter-selection/filter-selection.component';
+import { FilterDisplayComponent } from "../../shared/filter-display/filter-display.component";
 
 @Component({
   selector: 'app-dev-list',
-  imports: [DevListItemComponent,ReactiveFormsModule, AsyncPipe, CommonModule],
+  standalone:true,
+  imports: [DevListItemComponent, ReactiveFormsModule, AsyncPipe, CommonModule, FilterSelectionComponent, FilterDisplayComponent],
   templateUrl: './dev-list.component.html',
   styleUrl: './dev-list.component.scss'
 })
@@ -18,29 +21,31 @@ export class DevListComponent implements OnInit {
 
   devs$!: Observable<Dev[]>;
   studioName$!:Observable<string>;
+  studioId$!:Observable<string>;
   filteredDevs$!:Observable<Dev[]>;
-  filterSuggestions$!: Observable<LightElement[]>;
+  filterSelection$!:Observable<FilterSelection[]>;
   titleSuggestions$!: Observable<string[]>;
   
-  tagFilter$= new BehaviorSubject<string[]>([]);
-  filterLinkedToform$= new BehaviorSubject<string>("studios");
+  tagFilters$= new BehaviorSubject<string[]>([]);
   
-  showFilterSuggestions:boolean=false;
+  
   showTitleSuggestions:boolean=false;
 
 
   searchCtrl!: FormControl;
-  filterCtrl!: FormControl;
+  
   elementByPageCtrl!: FormControl;
 
 
-  constructor(private devService: DevService,
+
+  constructor(protected devService: DevService,
               private activeRoute: ActivatedRoute,
               private router:Router
   ){}
 
   ngOnInit(): void {
     this.initFormControls();
+    this.filterSelection$=this.setFilterSelection();
     this.activeRoute.queryParams.subscribe(params=>{
       const studioId =params['studioId'];
       if(studioId){
@@ -48,10 +53,10 @@ export class DevListComponent implements OnInit {
       };
     });
     this.studioName$=this.devService.studioName$;
-    this.filterSuggestions$=this.setFilterSuggestions();
+    
     this.titleSuggestions$=this.setTitleSuggestions();
     this.devs$=this.devService.devs$;
-    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges.pipe(startWith("")),this.tagFilter$.pipe(startWith([""])),this.elementByPageCtrl.valueChanges.pipe(startWith(20))
+    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges.pipe(startWith("")),this.tagFilters$.pipe(startWith([])),this.elementByPageCtrl.valueChanges.pipe(startWith(20))
     ]).pipe(
       map(([devs,title,tags,capacity])=>
         devs.filter(dev=>
@@ -67,16 +72,35 @@ export class DevListComponent implements OnInit {
   initFormControls(){
     this.elementByPageCtrl= new FormControl(20);
     this.searchCtrl=new FormControl("");
-    this.filterCtrl= new FormControl("");
+    
   }
 
   routeToComponent(dev:Dev){
     this.router.navigateByUrl(`dev/${dev.id}`);
   }
 
-  setFilterlinkedToForm(filter:Event){
-    const selectedFilter=(filter.target as HTMLSelectElement).value;
-    this.filterLinkedToform$.next(selectedFilter);
+ addNewFilter(filter:{type:string,output:string}){
+    if(filter.type.toLocaleLowerCase()==='Studios'){
+      this.devService.setStudioId(filter.output);
+    }else if(filter.type.toLocaleLowerCase()==='Tags'){
+      const previousFilters= this.tagFilters$.getValue();
+      const newFilter = filter.output;
+      if (!previousFilters.includes(newFilter)){
+        const actualizedFilters= [...previousFilters,newFilter];
+        this.tagFilters$.next(actualizedFilters);
+      }
+    }
+  }
+
+  setFilterSelection():Observable<FilterSelection[]>{
+    return combineLatest([this.devService.getLightStudios(),this.devService.getLightTags()]).pipe(
+      map(([lightStudios, lightTags])=>
+        [
+          {name: "Studios", suggestions: lightStudios},
+          {name: "Tags", suggestions: lightTags}
+        ]
+      )
+    );
   }
 
   setTitleSuggestions():Observable<string[]>{
@@ -91,55 +115,13 @@ export class DevListComponent implements OnInit {
     )
   }
 
-  setFilterSuggestions(): Observable<LightElement[]> {
-    return combineLatest([
-      this.filterCtrl.valueChanges.pipe(startWith("")),
-      this.filterLinkedToform$.pipe(startWith("studios"))
-    ]).pipe(
-      debounceTime(300),
-      switchMap(([text, filterType]) => {
-        const input = text?.trim().toLowerCase() ?? '';
-        if (!input) return of([]);
   
-        if (filterType === 'studios') {
-          return this.devService.getLightStudios().pipe(
-            map(studios =>
-              studios.filter(studio =>
-                studio.title?.toLowerCase().includes(input)
-              )
-            )
-          );
-        } else if (filterType === 'tags') {
-          return this.devService.getLightTags().pipe(
-            map(tags =>
-              tags.filter(tag =>
-                tag.title?.toLowerCase().includes(input)
-              )
-            )
-          );
-        } else {
-          return of([]);
-        }
-      })
-    );
-  }
   
   autoCompleteSuggestion(suggestion:string){
     this.searchCtrl.setValue(suggestion);
   }
 
-  addSuggestionToFilters(suggestion:LightElement){
-    if(this.filterLinkedToform$.getValue()=="studios"){
-      this.devService.setStudioId(suggestion.id);
-    }else if(this.filterLinkedToform$.getValue()=="tags"){
-      const currentTags=this.tagFilter$.value;
-      const matchingTag=currentTags.find(tag=>tag===suggestion.title);
-      let newTags= currentTags;
-      if (!matchingTag){
-        this.tagFilter$.next(currentTags.concat(suggestion.title));
-      }
-    }
-  }
+ 
 
   onMouseEnterTitleForm() {
     this.showTitleSuggestions = true;
@@ -152,30 +134,7 @@ export class DevListComponent implements OnInit {
     console.log("leave mouse");},100)
   }
 
-  onMouseEnterFilterForm() {
-    this.showFilterSuggestions = true;
-    
-  }
-
-  onMouseLeaveFilterForm() {
-    this.showFilterSuggestions=false;
-    setTimeout(() =>{
-      if(this.showFilterSuggestions===false){
-        this.filterCtrl.reset();
-      }
-    } ,100);
-     
-  }
-
-  deleteStudioFilter(input: string){
-    this.devService.setStudioId("");
-  }
-
-  deleteTagFilter(input:string){
-    const currentTags= this.tagFilter$.getValue();
-    const updatedTags= currentTags.filter(tag=>tag!==input)
-    this.tagFilter$.next(updatedTags);
-  }
+  
  
 
 

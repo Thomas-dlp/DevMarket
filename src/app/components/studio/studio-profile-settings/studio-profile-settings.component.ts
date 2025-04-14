@@ -8,6 +8,7 @@ import { StudioProfile } from '../../../templates/studio-profile.template';
 
 @Component({
   selector: 'app-studio-profile-settings',
+  standalone:true,
   imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './studio-profile-settings.component.html',
   styleUrl: './studio-profile-settings.component.scss'

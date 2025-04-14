@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 
 export const AuthInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) => {
   const token = sessionStorage.getItem('authToken');
-  console.log('Interceptor hit — token:', token);
   if (token) {
     const authReq = req.clone({
       setHeaders: {

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-studio-profile-dev-settings',
+  standalone:true,
   imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './studio-profile-dev-settings.component.html',
   styleUrl: './studio-profile-dev-settings.component.scss'
