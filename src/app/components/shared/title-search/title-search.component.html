@@ -3,7 +3,7 @@
         <form  >
             <label>SearchBar</label>
             <input  type="search" [formControl]="searchCtrl" placeholder="Search by title...">
-                <ul class="suggestions" *ngIf="suggestions$ | async as suggestions">
+                <ul class="suggestions" *ngIf="filteredSuggestions$ | async as suggestions">
                     <li *ngFor="let suggestion of suggestions" (click)="autoCompleteSuggestion(suggestion)" [hidden]="searchCtrl.getRawValue().length<=1">
                         {{ suggestion }}
                     </li>

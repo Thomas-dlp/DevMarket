@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { LightElement } from '../../../templates/light-element.template';
@@ -10,11 +10,14 @@ import { LightElement } from '../../../templates/light-element.template';
   templateUrl: './title-search.component.html',
   styleUrl: './title-search.component.scss'
 })
-export class TitleSearchComponent {
+export class TitleSearchComponent implements OnInit {
   @Input() searchCtrl!: FormControl;
   @Input() suggestions$!: Observable<string[]>;
-
-
+  filteredSuggestions$!:Observable<string[]>;
+  ngOnInit(): void {
+  this.filteredSuggestions$=this.setTitleSuggestions();
+    
+  }
 
   setTitleSuggestions():Observable<string[]>{
     return this.searchCtrl.valueChanges.pipe(
