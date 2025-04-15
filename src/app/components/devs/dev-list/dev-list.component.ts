@@ -9,11 +9,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FilterSelection } from '../../../templates/filter-selection.template';
 import { FilterSelectionComponent } from '../../shared/filter-selection/filter-selection.component';
 import { FilterDisplayComponent } from "../../shared/filter-display/filter-display.component";
+import { ItemsPerPageFilterComponent } from "../../shared/items-per-page-filter/items-per-page-filter.component";
+import { TitleSearchComponent } from "../../shared/title-search/title-search.component";
 
 @Component({
   selector: 'app-dev-list',
   standalone:true,
-  imports: [DevListItemComponent, ReactiveFormsModule, AsyncPipe, CommonModule, FilterSelectionComponent, FilterDisplayComponent],
+  imports: [DevListItemComponent, ReactiveFormsModule, AsyncPipe, CommonModule, FilterSelectionComponent, FilterDisplayComponent, ItemsPerPageFilterComponent, TitleSearchComponent],
   templateUrl: './dev-list.component.html',
   styleUrl: './dev-list.component.scss'
 })
@@ -27,22 +29,16 @@ export class DevListComponent implements OnInit {
   
   tagFilters$= new BehaviorSubject<string[]>([]);
   studioFilter$= new BehaviorSubject<string[]>([]);
+
+  searchCtrl= new FormControl("");
+  itemPerpageCtrl = new FormControl(20);
   
-
-
-  searchCtrl!: FormControl;
-  
-  
-
-
-
   constructor(protected devService: DevService,
               private activeRoute: ActivatedRoute,
               private router:Router
   ){}
 
   ngOnInit(): void {
-    this.initFormControls();
     this.filterSelection$=this.setFilterSelection();
     this.activeRoute.queryParams.subscribe(params=>{
       const studioId =params['studioId'];
@@ -50,33 +46,28 @@ export class DevListComponent implements OnInit {
         this.devService.setStudioId(studioId);
       };
     });
-    
-    this.titleSuggestions$=this.setTitleSuggestions();
     this.devs$=this.devService.devs$;
-    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges.pipe(startWith("")),this.tagFilters$.pipe(startWith([])),this.elementByPageCtrl.valueChanges.pipe(startWith(20))
+    this.titleSuggestions$=this.devs$.pipe(      //todo: suggest only the titles availables after first filtration. Therefore split firltration into several steps.
+      map(devs=>devs.map(dev=>dev.title))
+    );
+    this.filteredDevs$=combineLatest([this.devs$,this.searchCtrl.valueChanges.pipe(startWith("")),this.tagFilters$.pipe(startWith([])),this.itemPerpageCtrl.valueChanges.pipe(startWith(20))
     ]).pipe(
       map(([devs,title,tags,capacity])=>
         devs.filter(dev=>
           (title ? dev.title.toLowerCase().includes(title.toLowerCase()) : true) &&
           (tags.some(tag => dev.tags?.includes(tag)) || tags.length === 0)
-        ).slice(0,parseInt(capacity,10))
+        ).slice(0,capacity??20)
       )
     );
     this.filteredDevs$.subscribe(devs=>console.log("filteredDevs:",devs))
     this.devService.loadDevs();
   }
 
-  initFormControls(){
-    
-    this.searchCtrl=new FormControl("");
-    
-  }
-
   routeToComponent(dev:Dev){
     this.router.navigateByUrl(`dev/${dev.id}`);
   }
 
- addNewFilter(filter:{type:string,output:string}){
+  addNewFilter(filter:{type:string,output:string}){
     if(filter.type==='Studios'){
       this.devService.getLightStudios().pipe(
         take(1),
@@ -111,22 +102,10 @@ export class DevListComponent implements OnInit {
     this.studioFilter$.next([]);
   }
 
-  setTitleSuggestions():Observable<string[]>{
-    return this.searchCtrl.valueChanges.pipe(
-      debounceTime(300),
-      switchMap((value:string)=>{
-        return this.devs$.pipe(
-          map(devs=>devs.filter(dev=>dev.title.toLowerCase().includes(value.toLocaleLowerCase())).map(dev=>dev.title)),
-          
-        );
-      })
-    )
-  }
+ 
 
   
-  autoCompleteSuggestion(suggestion:string){
-    this.searchCtrl.setValue(suggestion);
-  }
+  
 
 
 }
