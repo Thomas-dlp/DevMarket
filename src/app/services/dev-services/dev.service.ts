@@ -18,7 +18,6 @@ export class DevService{
 
     setStudioId(id:string):void {
         this.studioId$.next(id);
-        this.loadDevs();
     }
 
 
@@ -32,8 +31,10 @@ export class DevService{
         return this.studioId$.pipe(
             switchMap(id=>{
                 if(id){
+                    console.warn("fetch studios with id:",id);
                     return this.http.get<Dev[]>(`${environment.apiUrl}/devs?studioId=${id}`) 
                 }else{
+                    console.warn("fetch all studios");
                    return this.http.get<Dev[]>(`${environment.apiUrl}/devs`)
                 }
             }

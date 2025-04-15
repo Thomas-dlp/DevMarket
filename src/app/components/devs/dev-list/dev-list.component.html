@@ -21,13 +21,7 @@
     
     
     <div>
-        <label>number of dev per page</label>
-        <select id="itemsPerPage" [formControl]="elementByPageCtrl">
-            <option value=5>5</option>
-            <option value=20>20</option>
-            <option value=50>50</option>
-            <option value=100>100</option>
-         </select>
+        
         
     <div class="list-item">
         <app-dev-list-item  *ngFor="let dev of filteredDevs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>

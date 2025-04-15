@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, debounceTime, isEmpty, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, isEmpty, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
 import { Dev } from '../../../templates/dev.template';
 import { DevService } from '../../../services/dev-services/dev.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,7 +32,7 @@ export class DevListComponent implements OnInit {
 
   searchCtrl!: FormControl;
   
-  elementByPageCtrl!: FormControl;
+  
 
 
 
@@ -67,7 +67,7 @@ export class DevListComponent implements OnInit {
   }
 
   initFormControls(){
-    this.elementByPageCtrl= new FormControl(20);
+    
     this.searchCtrl=new FormControl("");
     
   }
@@ -78,7 +78,11 @@ export class DevListComponent implements OnInit {
 
  addNewFilter(filter:{type:string,output:string}){
     if(filter.type==='Studios'){
-      this.devService.setStudioId(filter.output);
+      this.devService.getLightStudios().pipe(
+        take(1),
+        map(lightStudios=>
+          lightStudios.find(lStudio=>lStudio.title.toLocaleLowerCase()===filter.output.toLocaleLowerCase())?.id??""))
+        .subscribe(id=> this.devService.setStudioId(id))
       this.studioFilter$.next([filter.output]);
     }else if(filter.type==='Tags'){
       const previousFilters= this.tagFilters$.getValue();

@@ -1,7 +1,7 @@
-    <div class="display-area">
+    <div class="display-area" *ngIf="filterSelection$|async as filterSelection">
       <div>Select a filter</div>
       <select [value]="selectedFilterTypeName$.value"  (change)="setFilterlinkedToForm($event)">
-         <option *ngFor="let filterSelection of filterSelection$|async" value={{filterSelection.name}}>{{filterSelection.name}}</option>
+         <option *ngFor="let filterSelection of filterSelection" value={{filterSelection.name}}>{{filterSelection.name}}</option>
       </select>
   
       <form > 
