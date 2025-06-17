@@ -22,7 +22,7 @@ export class StudioProfileGuard implements CanActivate {
         if (isAuthenticated) {
           // Check if user has a studioId and if they have permission
           const userStudioId = sessionStorage.getItem('studioId');
-          const routeStudioId = next.paramMap.get('id');
+          const routeStudioId = next.parent?.paramMap.get('id');
 
           if (userStudioId === routeStudioId) {
             return true;
@@ -33,7 +33,7 @@ export class StudioProfileGuard implements CanActivate {
           }
         } else {
           // Redirect to login if not authenticated
-          this.router.navigate(['/login']);
+          this.router.navigate(['auth-studio']);
           return false;
         }
       })

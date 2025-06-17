@@ -9,6 +9,7 @@ import { DisplayableElement } from '../../../templates/displayable-element.templ
 import { HttpClient } from '@angular/common/http';
 import { Dev } from '../../../templates/dev.template';
 import { environment } from '../../../../environments/environments';
+import { ActualityManager } from '../../../services/actuality-service/actuality-manager-service/actuality-manager.service';
 
 @Component({
   selector: 'app-studio-page',
@@ -25,13 +26,15 @@ export class StudioPageComponent implements OnInit{
 
   constructor(private studioService:StudioService,
               private activeRoute:ActivatedRoute,
-              private router: Router
+              private router: Router,
+              private actualityManager: ActualityManager
             ){}
   
   ngOnInit(): void {
-    this.studioService.studioId=this.activeRoute.snapshot.params['id']; //todo: manage the id beetween the two components calling the service
+    this.studioService.studioId=this.activeRoute.parent?.snapshot.params['id']; //todo: manage the id beetween the two components calling the service
     this.studioPage$=this.studioService.getStudioPage();
-    this.studioActualities$=this.studioService.actualities$.pipe(
+    console.log(`manager id:${this.actualityManager.parentId}`);
+    this.studioActualities$=this.actualityManager.actualities$.pipe(
       map(actualities=>actualities.sort((a,b)=>a.order-b.order))
     )
   }

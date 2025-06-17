@@ -1,18 +1,24 @@
 <div class="main-content">
+    <div class="selection-title" *ngIf="studioFilter$|async as studioName">
+        <ng-container *ngIf="studioName.length>0; esle generalTitle">
+            <h1 (click)="navigateToStudio(studioName)">{{studioName}}'s Devs</h1>
+        </ng-container>
+        <ng-template #generalTitle>
+            <h1>Hot Devs</h1>
+        </ng-template>
+    </div>
+
+    
     
     <app-title-search [searchCtrl]="searchCtrl" [suggestions$]="titleSuggestions$"></app-title-search>
     <app-filter-display  [filters]="tagFilters$.getValue()" (filtersChange)="tagFilters$.next($event)"></app-filter-display>
-    <app-filter-display  [filters]="studioFilter$.getValue()" (filtersChange)="onStudioFilterDeletion()"></app-filter-display>
+    <app-filter-display  [filters]="[studioFilter$.getValue()]" (filtersChange)="onStudioFilterDeletion()"></app-filter-display>
     <app-filter-selection [filterSelection$]="filterSelection$" (selectedFilter$)="addNewFilter($event)"></app-filter-selection>
     <app-items-per-page-filter [itemsPerPageCtrl]="itemPerpageCtrl"></app-items-per-page-filter>    
     <div>
         
-        
     <div class="list-item">
         <app-dev-list-item  *ngFor="let dev of filteredDevs$ |async"  [dev]="dev" (click)="routeToComponent(dev)"> </app-dev-list-item>
-      
-
     </div> 
-    
 
 </div>

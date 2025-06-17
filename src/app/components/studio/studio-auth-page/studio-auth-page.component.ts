@@ -141,9 +141,8 @@ export class StudioAuthPageComponent implements OnInit {
     postResponse.subscribe({
       next:
         (response)=>{
-         // localStorage.setItem('token',response.token);
-    
-         this.route.navigate([`studio`, response.id, `profile`]);
+          console.log(`response: ${response.id}`);
+          this.route.navigate([`studio`, response.id, `profile`]);
         },
       error: (err)=>{
           this.authErrorMessage="Login/register operation failed"

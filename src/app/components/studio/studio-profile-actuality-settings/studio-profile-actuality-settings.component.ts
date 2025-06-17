@@ -50,6 +50,8 @@ fetchActualitySuggestions(input:string){
   );
 }
 
+
+/// create a DisplayableElementreference from the lightData
 addSuggestionToActualities(suggestion: LightElement) {
   const displayableElementReference: DisplayableElementReference = {
     DisplayableElementId: suggestion.id,

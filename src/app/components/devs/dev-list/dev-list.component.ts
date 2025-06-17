@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, debounceTime, isEmpty, map, Observable, of, startWith, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, startWith, take, tap } from 'rxjs';
 import { Dev } from '../../../templates/dev.template';
 import { DevService } from '../../../services/dev-services/dev.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,8 @@ import { FilterSelectionComponent } from '../../shared/filter-selection/filter-s
 import { FilterDisplayComponent } from "../../shared/filter-display/filter-display.component";
 import { ItemsPerPageFilterComponent } from "../../shared/items-per-page-filter/items-per-page-filter.component";
 import { TitleSearchComponent } from "../../shared/title-search/title-search.component";
+import { StudioService } from '../../../services/studio-services/studio.service';
+import { TagService } from '../../../services/tag-services/tag.service';
 
 @Component({
   selector: 'app-dev-list',
@@ -21,19 +23,20 @@ import { TitleSearchComponent } from "../../shared/title-search/title-search.com
 })
 export class DevListComponent implements OnInit {
 
+
   devs$!: Observable<Dev[]>;
-  studioName$!:Observable<string>;
   filteredDevs$!:Observable<Dev[]>;
   filterSelection$!:Observable<FilterSelection[]>;
   titleSuggestions$!: Observable<string[]>;
   
   tagFilters$= new BehaviorSubject<string[]>([]);
-  studioFilter$= new BehaviorSubject<string[]>([]);
-
+  studioFilter$= new BehaviorSubject<string>("");
   searchCtrl= new FormControl("");
   itemPerpageCtrl = new FormControl(20);
   
   constructor(protected devService: DevService,
+              private studioService: StudioService,
+              private tagService: TagService,
               private activeRoute: ActivatedRoute,
               private router:Router
   ){}
@@ -69,12 +72,11 @@ export class DevListComponent implements OnInit {
 
   addNewFilter(filter:{type:string,output:string}){
     if(filter.type==='Studios'){
-      this.devService.getLightStudios().pipe(
-        take(1),
-        map(lightStudios=>
-          lightStudios.find(lStudio=>lStudio.title.toLocaleLowerCase()===filter.output.toLocaleLowerCase())?.id??""))
-        .subscribe(id=> this.devService.setStudioId(id))
-      this.studioFilter$.next([filter.output]);
+      this.getStudioIdFromName(filter.output)
+        .subscribe(id=> {
+          this.devService.setStudioId(id);
+        })
+      this.studioFilter$.next(filter.output); //todo: matching erro possible with studio Id
     }else if(filter.type==='Tags'){
       const previousFilters= this.tagFilters$.getValue();
       const newFilter = filter.output;
@@ -86,7 +88,7 @@ export class DevListComponent implements OnInit {
   }
 
   setFilterSelection():Observable<FilterSelection[]>{
-    return combineLatest([this.devService.getLightStudios(),this.devService.getLightTags()]).pipe(
+    return combineLatest([this.studioService.getLightStudios(),this.tagService.getLightTags()]).pipe(
       map(([lightStudios, lightTags])=>
         [
           {name: "Studios", suggestions: lightStudios},
@@ -95,17 +97,22 @@ export class DevListComponent implements OnInit {
       )
     );
   }
-
   
   onStudioFilterDeletion(){
     this.devService.setStudioId("");
-    this.studioFilter$.next([]);
+    this.studioFilter$.next("");
   }
 
- 
+  navigateToStudio(studioName: string) {
+    this.getStudioIdFromName(studioName).subscribe(studioId=>{this.router.navigateByUrl(`studio/${studioId}/page`)});
+  }
 
+  getStudioIdFromName(name:string):Observable<string>{
+   return this.studioService.getLightStudios().pipe(
+      take(1),
+      map(lightStudios=>
+        lightStudios.find(lStudio=>lStudio.title.toLocaleLowerCase()===name.toLocaleLowerCase())?.id??""),
+      );
+  }
   
-  
-
-
 }

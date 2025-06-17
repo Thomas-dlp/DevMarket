@@ -1,29 +1,59 @@
 <div class="main-content" *ngIf="profile$|async as studioProfile">
-   <div class="tabs">
-        <ul>
-            <li  *ngFor="let tab of tabs" [ngClass]="{active: selectedTab===tab.id}" (click)="selectTab(tab.id)">
-                {{tab.label}}
-            </li>
-        </ul>
-   </div>
-    
-   <div class="tab-content">
-        @switch (selectedTab) {
-            @case(tabs[0].id){
-                <app-studio-profile-settings [studioProfile$]="profile$"></app-studio-profile-settings>
-            }
-            @case(tabs[1].id){
-               <app-studio-profile-actuality-settings></app-studio-profile-actuality-settings>
-            }
-            @case(tabs[2].id){
-               
-                <app-studio-profile-dev-settings></app-studio-profile-dev-settings>
-            }
-        }
-   </div>
    
+    <form [formGroup]="profileForm">
+        <li>
+            <label>Name</label>
+            <input type="string" formControlName="name">
+        </li>
 
-   
+        <li>
+            <label>LogoUrl</label>
+            <input type=string formControlName="logoUrl">
+           
+        </li>
+        <li>
+            <label>BackgroundUrl</label>
+            <input type=string formControlName="backgroundPictureUrl">
+        </li>
+        <li>
+            <label>Abstract</label>
+            <input type=string formControlName="abstract">
+        </li>
+        <li>
+            <label>Bio</label>
+            <input type=string formControlName="bio">
+        </li>
+        <button type="submit" (click)="saveForm()">Save</button>
+        <button routerLink="/studio/{{this.studioService.studioId}}/profile">Open</button>
+    </form>
+
+    <div class="display-group">
+        <div class="display-title">Create new dev</div>
+        <div class="display-area" *ngIf="newDevForm" >
+            <div class="display-element">
+                <form [formGroup]="newDevForm">
+                    <li>
+                        <label>Name</label>
+                        <input type="string" formControlName="name">
+                    </li>
+            
+                    <li>
+                        <label>LogoUrl</label>
+                        <input type=string formControlName="logoUrl">
+                       
+                    </li>
+                   
+                    <li>
+                        <label>Description</label>
+                        <input type=string formControlName="description">
+                    </li>
+                    <button type="submit" (click)="createNewDev()">Save</button>
+                    
+                </form>
+            </div>
+            
+        </div>
+    </div>
 
 
     

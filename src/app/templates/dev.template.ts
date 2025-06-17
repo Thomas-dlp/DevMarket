@@ -5,6 +5,7 @@ export class Dev{
     tags?: string[];
     imageUrl?:string;
     studioId!:string;
+    
 
 }
 

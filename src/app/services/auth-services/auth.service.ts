@@ -21,7 +21,6 @@ export class AuthService{
                 console.log("saving token:",response.token);
                 sessionStorage.setItem('authToken', response.token);
                 sessionStorage.setItem('studioId', response.id)
-                
             }),
                 
             catchError(error=>{

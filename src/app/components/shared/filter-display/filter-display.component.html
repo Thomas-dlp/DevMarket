@@ -2,7 +2,7 @@
     
     
     <div class="filters" >
-        <li class="filter" *ngFor="let filter of filters">
+        <li class="filter" *ngFor="let filter of filters" [hidden]="filter.length<=0">
             {{filter}}
             <button  class="hover-button" (click)="deleteFilter(filter)" >X</button>
         </li>
