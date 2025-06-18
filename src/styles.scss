@@ -9,11 +9,24 @@
     margin: 0;
     padding: 0;
     padding-block-start: 11%;
-    background-color: #f4f4f4;
-   
+    // background-color: #f4f4f4;
+//    background-color: rgb(33.7,61.2,83.9);
+    background-color: #1e1e1e;
+    color: #d3b762;
     flex-grow: 1; // Allow the main content to grow and take up remaining space
     
    
+}
+h1,h2,h3{
+     color: whitesmoke;
+}
+
+.logo-colours{
+  color: rgb(33.7,61.2,83.9); //blue
+  color: rgb(82.7,71.8,38.4); //yellow
+  color:#1e1e1e;
+  color: #569cd6;
+  color: #d3b762;
 }
 
 *{
