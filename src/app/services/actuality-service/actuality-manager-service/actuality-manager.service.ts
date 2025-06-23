@@ -7,6 +7,7 @@ import { DisplayableElementReference } from '../../../templates/displayable-elem
 import { LightElement } from '../../../templates/light-element.template';
 import { catchError, map, switchMap, take, tap } from 'rxjs';
 import { PARENT_ID } from '../../../components/shared/tokens/tokens';
+import { environment } from '../../../../environments/environments';
 
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ActualityManager {
   
   constructor(@Inject(PARENT_ID) public parentId: string) {
     this.cache=new CachedResource(() =>
-      this.http.get<DisplayableElement[]>(`/api/studios/${this.parentId}/actualities`)); // todo check api call
+      this.http.get<DisplayableElement[]>(`${environment.apiUrl}/studios/${this.parentId}/actualities`)); // todo check api call
   }
   
 

@@ -58,7 +58,8 @@ export class StudioProfileComponent implements OnInit{
       }
     });
     this.actualities$=this.actualityManager.actualities$.pipe(
-      map(actualities => actualities.sort((a, b) => a.order - b.order))
+      map(actualities => actualities.sort((a, b) => a.order - b.order)),
+     
     );
     this.initDevFormControls();
     this.initDevFormGroup();
@@ -106,6 +107,7 @@ export class StudioProfileComponent implements OnInit{
       };
       this.devService.createNewDev(payload).subscribe({
         next: response => {
+          console.log("next",response);
             if (response.id){
               console.log(`${environment.apiUrl}/dev/${response.id}`);
               this.router.navigateByUrl(`dev/${response.id}`).then(success => {
@@ -128,10 +130,11 @@ export class StudioProfileComponent implements OnInit{
   }
 
   saveForm() {
-    this.studioService.updateStudioProfileForm(this.profileForm);
+    console.log(`form`,this.profileForm);
+    this.studioService.updateStudioProfileForm(this.profileForm.value);
   }
 
-  fetcActualitySuggestions(input: string){
+  fetchActualitySuggestions(input: string){
     const allSugggestions= ["actuality1","actuality"]
   }
   // modifyActuality(formerActuality:DisplayableElement, newActuality:DisplayableElement) {

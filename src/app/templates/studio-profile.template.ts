@@ -1,6 +1,6 @@
 export class StudioProfile
 {
-    id!:string;
+    // id!:string;
     name!:string
     logoUrl!:string 
     backgroundPictureUrl!:string;

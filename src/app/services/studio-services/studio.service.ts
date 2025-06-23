@@ -41,7 +41,12 @@ export class StudioService{
     }
 
     updateStudioProfileForm(studioProfileUpdate: any) {
-        return this.http.patch(`${environment.apiUrl}/studios/${this.studioId}/profile`,studioProfileUpdate);
+        console.log('patch request:',studioProfileUpdate);
+        this.http.patch(`${environment.apiUrl}/studios/${this.studioId}/profile`, studioProfileUpdate)
+        .subscribe({
+            next: response => console.log('PATCH succeeded:', response),
+            error: err => console.error('PATCH failed:', err)
+         });
     }
     
     

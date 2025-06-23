@@ -15,7 +15,7 @@ export class CachedResource<T extends object> {
     if (this.isRefreshNeeded()){
         this.refresh();
     }    
-
+console.log('cache:', this.cache.value);
     return this.cache.asObservable().pipe(
       filter(value => value !== null) 
     );
@@ -29,8 +29,8 @@ export class CachedResource<T extends object> {
     this.loading$.pipe(take(1)).subscribe(isLoading=>{
         if(isLoading) return;
         this.loading$.next(true);
-        this.fetchFn().pipe(take(1)).subscribe({
-            next: data => {  //take(1) in case of the observable not beeing oneshot
+        this.fetchFn().pipe(take(1)).subscribe({ //take(1) in case of the observable not beeing oneshot
+            next: data => {  
                 this.cache.next(data);
                 this.lastLoadedAt = Date.now();
                 this.loading$.next(false);
