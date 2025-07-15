@@ -7,6 +7,8 @@ import { StudioService } from '../../../services/studio-services/studio.service'
 import { DisplayableElementReference, DisplayableElementType } from '../../../templates/displayable-element-reference.template';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DevService } from '../../../services/dev-services/dev.service';
+import { ActualityManager } from '../../../services/actuality-service/actuality-manager-service/actuality-manager.service';
 
 @Component({
   selector: 'app-studio-profile-actuality-settings',
@@ -23,14 +25,17 @@ showSuggestions: boolean=false;
 
 actualitySearchBarCtrl!: FormControl;
 
-constructor(private formBuilder:FormBuilder, protected studioService:StudioService){}
+constructor(private formBuilder:FormBuilder,
+   protected studioService:StudioService,
+  private devService: DevService,
+  private actualityManager: ActualityManager,
+   ){}
 
 ngOnInit(){
   this.actualitySearchBarCtrl=this.formBuilder.control("");
-  this.actualities$=this.studioService.actualities$.pipe(
+  this.actualities$=this.actualityManager.actualities$.pipe(
     map(actualities => actualities.sort((a, b) => a.order - b.order))
   );
-  this.studioService.getAllActualities();
 }
 
 onActualitySearchBarTextChange() {
@@ -44,7 +49,7 @@ onActualitySearchBarTextChange() {
 }
 
 fetchActualitySuggestions(input:string){
-  const lightDevs= this.studioService.getLightDevs();
+  const lightDevs= this.devService.getLightDevs();
   this.actualitySuggestions$= lightDevs.pipe(
     map(devs=>devs.filter(dev=>dev.title?.toLowerCase().includes(input.toLowerCase())))
   );
@@ -60,19 +65,19 @@ addSuggestionToActualities(suggestion: LightElement) {
   };
 
   // Call the service method with the displayableElementReference
-  this.studioService.addActuality(displayableElementReference);
+  this.actualityManager.addActualityWithOptimisticPreview(displayableElementReference,"studioID",suggestion);
 }
 
 
 modifyActuality(formerActuality:DisplayableElement, newActuality:DisplayableElement) {
   this.showSuggestions = true; 
-  this.studioService.modifyActualityById(formerActuality.id,newActuality.id);
+  this.actualityManager.modifyActualityById(formerActuality.id,newActuality.id);
   this.showSuggestions = true; 
 }
 
 
 deleteActuality(actuality: DisplayableElement) {
-  this.studioService.deleteActualityById(actuality.id);
+  this.actualityManager.removeActualityById(actuality.id);
 }
 
 onMouseEnter() {

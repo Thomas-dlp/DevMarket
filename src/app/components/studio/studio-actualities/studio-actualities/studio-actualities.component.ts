@@ -1,13 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ActualityManager } from '../../../../services/actuality-service/actuality-manager-service/actuality-manager.service';
-import { CachedResource } from '../../../../services/cache-services/cached-resource.service';
-import { DisplayableElement } from '../../../../templates/displayable-element.template';
-import { ActualityService } from '../../../../services/actuality-service/actuality.service';
 import { PARENT_ID } from '../../../shared/tokens/tokens';
-import { StudioPageComponent } from '../../studio-page/studio-page.component';
-import { StudioProfileComponent } from '../../studio-profile/studio-profile.component';
 
 @Component({
   standalone: true,

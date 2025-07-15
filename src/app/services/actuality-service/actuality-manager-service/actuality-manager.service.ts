@@ -33,22 +33,22 @@ export class ActualityManager {
     this.actualityService.reorderActuality(actuality.id, newOrder);
   }
 
-  addActualityWithOptimisticPreview(reference: DisplayableElementReference, parentId: string, lightElement: LightElement){
+  addActualityWithOptimisticPreview(reference: DisplayableElementReference, parentId: string, previewLightElement: LightElement){
      //add loading logic
-    const previewElement={order: reference.Order,id:reference.DisplayableElementId, title: lightElement.title} as DisplayableElement; // optimistic preview
+    const previewDisplayableElement={order: reference.Order,id:reference.DisplayableElementId, title: previewLightElement.title} as DisplayableElement; // optimistic preview
     const updatedCache= this.cache.values$.pipe(
       take(1),
-      tap(values=>this.cache.updateCache(values.concat(previewElement)))
+      tap(values=>this.cache.updateCache(values.concat(previewDisplayableElement)))
     ).subscribe(); 
     
     this.actualityService.addActualityReferenceAndFetchElement(reference, parentId).subscribe({ //replace preview by backend value
       next: returnedValue=>{
-        this.replaceElementInCache(previewElement.id,returnedValue) //todo: check how ids are defined fo displayable elements
+        this.replaceElementInCache(previewDisplayableElement.id,returnedValue) //todo: check how ids are defined fo displayable elements
         //add loading logic
       },
       error: err=>{
         console.error('Failed to register the actuality.');
-        this.deleteElementFromCache(previewElement.id);
+        this.deleteElementFromCache(previewDisplayableElement.id);
         //ad loading logic
       }  
     });

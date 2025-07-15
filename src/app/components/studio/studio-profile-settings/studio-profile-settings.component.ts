@@ -35,6 +35,8 @@ export class StudioProfileSettingsComponent implements OnInit, OnDestroy{
   abstractCtrl!: FormControl;
   bioCtrl!: FormControl;
 
+  
+
   constructor(protected studioService: StudioService, private formBuilder:FormBuilder){}
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -77,8 +79,11 @@ export class StudioProfileSettingsComponent implements OnInit, OnDestroy{
     console.log("invalid form");
     return;
   }
-  this.studioService.updateForm(this.profileForm.getRawValue()).subscribe(
-    result=>console.log('updated form:',result)
-  );
+  this.studioService.updateStudioProfileForm(this.profileForm.getRawValue().subscribe(
+    (    result: any)=>console.log('updated form:',result)
+  ));
 }
+
+
+
 }

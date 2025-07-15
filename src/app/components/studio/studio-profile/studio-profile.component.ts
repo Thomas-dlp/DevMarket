@@ -8,12 +8,14 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { DisplayableElement } from '../../../templates/displayable-element.template';
 import { environment } from '../../../../environments/environments';
 import { DevService } from '../../../services/dev-services/dev.service';
-import { ActualityManager } from '../../../services/actuality-service/actuality-manager-service/actuality-manager.service';
+import { StudioProfileSettingsComponent } from "../studio-profile-settings/studio-profile-settings.component";
+import { StudioProfileDevSettingsComponent } from "../studio-profile-dev-settings/studio-profile-dev-settings.component";
+import { StudioProfileActualitySettingsComponent } from "../studio-profile-actuality-settings/studio-profile-actuality-settings.component";
 
 
 @Component({
   selector: 'app-studio-profile',
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, StudioProfileSettingsComponent, StudioProfileSettingsComponent, StudioProfileActualitySettingsComponent, StudioProfileDevSettingsComponent],
   templateUrl: './studio-profile.component.html',
   styleUrl: './studio-profile.component.scss'
 })
@@ -21,127 +23,39 @@ export class StudioProfileComponent implements OnInit{
 
 
   profile$!:Observable<StudioProfile>
-  actualities$!:Observable<DisplayableElement[]>;
+  
 
-  profileForm!:FormGroup;
-  nameCtrl!:FormControl;
-  logoUrlCtrl!: FormControl;
-  backgroudPictureUrlCtrl!: FormControl;
-  abstractCtrl!: FormControl;
-  bioCtrl!: FormControl;
-  newDevForm!:FormGroup;
-  devNameCtrl!:FormControl;
-  devLogoUrlCtrl!: FormControl;
-  devDescriptionCtrl!: FormControl;
-  actualitySearchBarCtrl!: FormControl;
-
-
+  tabs:any= [
+    {
+      id:1,
+      label: "General settings",
+    },
+    {
+      id:2,
+      label:"Actuality settings"
+    },
+    {
+      id:3,
+      label:"Dev settings"
+    }
+  ];
+  selectedTab:number=1;
 
   constructor(
     private activeRoute: ActivatedRoute,
-    protected studioService: StudioService,
-    private devService: DevService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private actualityManager: ActualityManager
+    private studioService: StudioService
   ){}
 
   ngOnInit(): void {
     this.studioService.studioId=this.activeRoute.parent?.snapshot.params['id'];
     this.profile$=this.studioService.getStudioProfile();
-    this.initFormControls();
-    this.initMainForm();
-    this.profile$.subscribe(profile => {
-      console.log('Received studioProfile:', profile);
-      if (profile) {
-        this.profileForm.patchValue(profile);  
-      }
-    });
-    this.actualities$=this.actualityManager.actualities$.pipe(
-      map(actualities => actualities.sort((a, b) => a.order - b.order)),
-     
-    );
-    this.initDevFormControls();
-    this.initDevFormGroup();
-
   }
 
-  private initMainForm():void{
-    this.profileForm= this.formBuilder.group({
-      name: this.nameCtrl,
-      logoUrl: this.logoUrlCtrl,
-      backgroundPictureUrl: this.backgroudPictureUrlCtrl,
-      abstract: this.abstractCtrl,
-      bio: this.bioCtrl
-    });
-  }
 
-  private initFormControls(){
-    this.nameCtrl=this.formBuilder.control("",Validators.required);
-    this.logoUrlCtrl=this.formBuilder.control("");
-    this.backgroudPictureUrlCtrl=this.formBuilder.control("");
-    this.abstractCtrl=this.formBuilder.control("");
-    this.bioCtrl=this.formBuilder.control("");
-    this.actualitySearchBarCtrl=this.formBuilder.control("");
-  }
 
-  initDevFormGroup(){
-    this.newDevForm=this.formBuilder.group({
-      name: this.devNameCtrl,
-      logoUrl: this.devLogoUrlCtrl,
-      description: this.devDescriptionCtrl
-    })
+  selectTab(tabId:number){
+    this.selectedTab=tabId;
   }
-  private initDevFormControls(){
-    this.devNameCtrl=this.formBuilder.control("",Validators.required);
-    this.devLogoUrlCtrl=this.formBuilder.control("");
-    this.devDescriptionCtrl=this.formBuilder.control("");
-  }
-
-  createNewDev() {
-    this.newDevForm.updateValueAndValidity();
-    if (this.newDevForm.valid) {
-      const payload={
-        ...this.newDevForm.getRawValue(),
-        studioId: this.studioService.studioId
-      };
-      this.devService.createNewDev(payload).subscribe({
-        next: response => {
-          console.log("next",response);
-            if (response.id){
-              console.log(`${environment.apiUrl}/dev/${response.id}`);
-              this.router.navigateByUrl(`dev/${response.id}`).then(success => {
-                if (success) {
-                  this.newDevForm.reset(); 
-                }
-              });
-          
-        }
-        },
-        error: err => {
-          console.error('Failed to create new dev:', err);
-          // Optionally show error to user (e.g. toast, dialog)
-        },
-        complete: () => {
-          console.log('Dev creation request completed.');
-        }
-      });
-    }
-  }
-
-  saveForm() {
-    console.log(`form`,this.profileForm);
-    this.studioService.updateStudioProfileForm(this.profileForm.value);
-  }
-
-  fetchActualitySuggestions(input: string){
-    const allSugggestions= ["actuality1","actuality"]
-  }
-  // modifyActuality(formerActuality:DisplayableElement, newActuality:DisplayableElement) {
-  //   this.actualityManager.modifyActualityById(formerActuality.id,newActuality.id);
-  // }
-
-  
  
 
 }
